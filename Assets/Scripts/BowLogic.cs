@@ -26,17 +26,18 @@ public class BowLogic : MonoBehaviour
 
     void Update()
     {
-        // Se o pullPoint estiver sendo "segurado" pelo sistema de VR
-        if (interactable.isSelected)
+        // Verifica se o jogador está segurando a corda/flecha
+        if (interactable != null && interactable.isSelected)
         {
-            // Pega a posição da mão que está segurando
+            // Pega a posição da mão (interactor) que está selecionando o objeto
             Vector3 handPos = interactable.interactorsSelecting[0].transform.position;
             UpdateStringPosition(handPos);
         }
         else
         {
-            // Se soltou, a corda volta pro zero (visual)
-            pullPoint.localPosition = Vector3.Lerp(pullPoint.localPosition, Vector3.zero, Time.deltaTime * 20);
+            // Se não estiver segurando, a corda volta suavemente para o repouso
+            pullPoint.localPosition = Vector3.Lerp(pullPoint.localPosition, Vector3.zero, Time.deltaTime * 20f);
+            currentPullAmount = 0;
         }
 
         UpdateStringVisuals();
