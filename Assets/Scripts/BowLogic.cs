@@ -1,8 +1,12 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class BowLogic : MonoBehaviour
 {
+    public XRGrabInteractable interactable;
+
     [Header("Referencias da Corda")]
     public LineRenderer lineRenderer;
     public Transform topPoint;
@@ -22,7 +26,20 @@ public class BowLogic : MonoBehaviour
 
     void Update()
     {
-        
+        // Se o pullPoint estiver sendo "segurado" pelo sistema de VR
+        if (interactable.isSelected)
+        {
+            // Pega a posição da mão que está segurando
+            Vector3 handPos = interactable.interactorsSelecting[0].transform.position;
+            UpdateStringPosition(handPos);
+        }
+        else
+        {
+            // Se soltou, a corda volta pro zero (visual)
+            pullPoint.localPosition = Vector3.Lerp(pullPoint.localPosition, Vector3.zero, Time.deltaTime * 20);
+        }
+
+        UpdateStringVisuals();
     }
 
     public void UpdateStringPosition(Vector3 handWorldPos) 
@@ -39,6 +56,13 @@ public class BowLogic : MonoBehaviour
         //calcula força
         currentPullAmount = Mathf.Abs(stringLimit) / maxPullDistance;
         
+    }
+    void UpdateStringVisuals()
+    {
+        // Desenha a linha entre as pontas e o ponto de puxada
+        lineRenderer.SetPosition(0, topPoint.position);
+        lineRenderer.SetPosition(1, pullPoint.position);
+        lineRenderer.SetPosition(2, bottomPoint.position);
     }
 
     public void ReleaseArrow(Rigidbody arrowRb)
