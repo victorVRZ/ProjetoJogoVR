@@ -1,84 +1,111 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class BowLogic : MonoBehaviour
 {
-    public XRGrabInteractable interactable;
-
-    [Header("Referencias da Corda")]
+    [Header("Referências")]
     public LineRenderer lineRenderer;
+    public Transform pullPoint;
+    public Transform stringStartPoint;
+    public Transform nockRestPoint;
     public Transform topPoint;
     public Transform bottomPoint;
-    public Transform pullPoint;
-    public Transform StringStartPoint;
 
-    [Header("Configurações de Puxada da Corda")]
-    public Transform nockRestPoint;
+    [Header("Configurações")]
     public float maxPullDistance = 0.6f;
     public float maxLaunchForce = 40f;
 
+    // Ajuste isso no Inspector se a flecha ficar "torta" ao encaixar
+    public Vector3 arrowRotationOffset = new Vector3(0, 0, 0);
+
+    private GameObject currentArrow;
+    private XRGrabInteractable arrowInteractable;
     private float currentPullAmount;
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
-        // Verifica se o jogador está segurando a corda/flecha
-        if (interactable != null && interactable.isSelected)
+        if (currentArrow != null && arrowInteractable != null && arrowInteractable.isSelected)
         {
-            // Pega a posição da mão (interactor) que está selecionando o objeto
-            Vector3 handPos = interactable.interactorsSelecting[0].transform.position;
+            // 1. Pegamos a posição da mão que segura a flecha
+            Vector3 handPos = arrowInteractable.interactorsSelecting[0].transform.position;
+
+            // 2. Movemos a corda (pullPoint)
             UpdateStringPosition(handPos);
+        }
+        else if (currentArrow != null)
+        {
+            // Se soltou a flecha enquanto ela estava no arco: ATIRA
+            ReleaseArrow();
         }
         else
         {
-            // Se não estiver segurando, a corda volta suavemente para o repouso
-            pullPoint.localPosition = Vector3.Lerp(pullPoint.localPosition, StringStartPoint.localPosition, Time.deltaTime * 20f);
-            currentPullAmount = 0;
+            // Se não tem flecha, a corda volta ao normal
+            ResetString();
         }
 
         UpdateStringVisuals();
     }
 
-    public void UpdateStringPosition(Vector3 handWorldPos) 
+    public void UpdateStringPosition(Vector3 handWorldPos)
     {
-        // converte a posicao da mao de world para local
-        Vector3 localHandPos = pullPoint.InverseTransformPoint(handWorldPos);
+        // IMPORTANTE: Usamos o transform do ARCO como referência
+        Vector3 localHandPos = transform.InverseTransformPoint(handWorldPos);
 
-        //capa o movimento da mao impedindo que ultrapasse o ponto de repouso e o ponto maximo e impede de ir para os lados
-        float stringLimit = Mathf.Clamp(localHandPos.z, -maxPullDistance, 0);
+        // Clamp para a corda só ir para trás no eixo Z
+        float zPull = Mathf.Clamp(localHandPos.z, -maxPullDistance, 0);
 
-        //atualiza o pullpoint da corda (apenas visual)
-        pullPoint.localPosition = localHandPos; // new Vector3(0, 0, stringLimit);
-
-        //calcula força
-        currentPullAmount = Mathf.Abs(stringLimit) / maxPullDistance;
-        
+        pullPoint.localPosition = new Vector3(0, 0, zPull);
+        currentPullAmount = Mathf.Abs(zPull) / maxPullDistance;
     }
+
+    // Chame esta função no evento "Select Entered" do seu XRSocketInteractor (ou via Trigger)
+    public void OnArrowNocked(SelectEnterEventArgs args)
+    {
+        currentArrow = args.interactableObject.transform.gameObject;
+        arrowInteractable = currentArrow.GetComponent<XRGrabInteractable>();
+
+        // CONFIGURAÇÃO MÁGICA:
+        // Torna a flecha filha do pullPoint para que ela siga a corda perfeitamente
+        currentArrow.transform.SetParent(pullPoint);
+
+        // Zera a posição e aplica a rotação do nockPoint
+        currentArrow.transform.localPosition = Vector3.zero;
+        currentArrow.transform.localRotation = Quaternion.Euler(arrowRotationOffset);
+
+        Rigidbody rb = currentArrow.GetComponent<Rigidbody>();
+        if (rb) rb.isKinematic = true;
+    }
+
+    public void ReleaseArrow()
+    {
+        if (currentArrow != null)
+        {
+            // Tira a flecha de "filha" do arco antes de aplicar força
+            currentArrow.transform.SetParent(null);
+
+            Rigidbody rb = currentArrow.GetComponent<Rigidbody>();
+            rb.isKinematic = false;
+
+            if (currentPullAmount > 0.1f)
+            {
+                rb.AddForce(nockRestPoint.forward * (currentPullAmount * maxLaunchForce), ForceMode.Impulse);
+            }
+
+            currentArrow = null;
+            arrowInteractable = null;
+        }
+    }
+
     void UpdateStringVisuals()
     {
-        // Desenha a linha entre as pontas e o ponto de puxada
         lineRenderer.SetPosition(0, topPoint.position);
-        lineRenderer.SetPosition(1, StringStartPoint.position);
+        lineRenderer.SetPosition(1, pullPoint.position);
         lineRenderer.SetPosition(2, bottomPoint.position);
     }
 
-    public void ReleaseArrow(Rigidbody arrowRb)
+    private void ResetString()
     {
-        if (currentPullAmount > 0.1f)
-        {
-            float force = currentPullAmount * maxLaunchForce;
-            // Dispara na direção 'forward' do arco
-            arrowRb.AddForce(nockRestPoint.forward * force, ForceMode.Impulse);
-        }
-
-        // Reseta a corda para o centro
-        currentPullAmount = 0;
-        pullPoint.localPosition = Vector3.zero;
+        pullPoint.localPosition = Vector3.Lerp(pullPoint.localPosition, stringStartPoint.localPosition, Time.deltaTime * 20f);
     }
 }
-
