@@ -544,6 +544,92 @@ MonoBehaviour:
   m_BodyPositionEvaluatorObject: {fileID: 0}
   m_ConstrainedBodyManipulatorObject: {fileID: 0}
   m_UseCharacterControllerIfExists: 1
+--- !u!1 &636201239 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7535126907237905848, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+  m_PrefabInstance: {fileID: 1727252633449296327}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &636201241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636201239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60523e0647cc6ab43acc73cb266a32a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor
+  m_InteractionManager: {fileID: 0}
+  m_InteractionLayers:
+    m_Bits: 4294967295
+  m_Handedness: 0
+  m_AttachTransform: {fileID: 0}
+  m_KeepSelectedTargetValid: 1
+  m_DisableVisualsWhenBlockedInGroup: 1
+  m_StartingSelectedInteractable: {fileID: 0}
+  m_StartingTargetFilter: {fileID: 0}
+  m_AutoFindParentInteractableInHierarchy: 0
+  m_ParentInteractableObject: {fileID: 1735893191}
+  m_HoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectEntered:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1735893190}
+        m_TargetAssemblyTypeName: BowLogic, Assembly-CSharp
+        m_MethodName: OnArrowNocked
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_SelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_StartingHoverFilters: []
+  m_StartingSelectFilters: []
+  m_ShowInteractableHoverMeshes: 1
+  m_InteractableHoverMeshMaterial: {fileID: 0}
+  m_InteractableCantHoverMeshMaterial: {fileID: 0}
+  m_SocketActive: 1
+  m_InteractableHoverScale: 1
+  m_RecycleDelayTime: 1
+  m_HoverSocketSnapping: 0
+  m_SocketSnappingRadius: 0.1
+  m_SocketScaleMode: 0
+  m_FixedScale: {x: 1, y: 1, z: 1}
+  m_TargetBoundsSize: {x: 1, y: 1, z: 1}
+--- !u!135 &636201242
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636201239}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.05
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &783081222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,6 +1646,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1574224953 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4800807957353789985, guid: c245cd8111b63244ab7099193914d659, type: 3}
+  m_PrefabInstance: {fileID: 2522488985397457103}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1605868062
 GameObject:
   m_ObjectHideFlags: 0
@@ -2149,6 +2240,33 @@ MonoBehaviour:
     m_ObjectReferenceObject: {fileID: 0}
     m_ManualValue: {x: 0, y: 0}
   m_UseGravity: 1
+--- !u!114 &1735893190 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4159935538573941163, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+  m_PrefabInstance: {fileID: 1727252633449296327}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cffc00e23f34039498ff7c2ab3db0ab5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BowLogic
+--- !u!114 &1735893191 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 732171928266958269, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+  m_PrefabInstance: {fileID: 1727252633449296327}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
+--- !u!4 &1820812672 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6986966835269056720, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+  m_PrefabInstance: {fileID: 1727252633449296327}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1964448347
 GameObject:
   m_ObjectHideFlags: 0
@@ -2596,6 +2714,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1565010196520666877, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2004243102646076031, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
       propertyPath: m_Size.x
       value: 0.05597107
@@ -2655,6 +2777,18 @@ PrefabInstance:
     - target: {fileID: 3901251120384399893, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4159935538573941163, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      propertyPath: stringStartPoint
+      value: 
+      objectReference: {fileID: 1820812672}
+    - target: {fileID: 4159935538573941163, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      propertyPath: arrowRotationOffset.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5231382024178982432, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5498309116724696889, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
       propertyPath: m_LocalScale.x
@@ -2736,6 +2870,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7535126907237905848, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7950926127476929179, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8093789378178498624, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2743,7 +2885,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7535126907237905848, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 636201241}
+    - targetCorrespondingSourceObject: {fileID: 7535126907237905848, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 636201242}
   m_SourcePrefab: {fileID: 100100000, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
 --- !u!1001 &2522488985397457103
 PrefabInstance:
@@ -2753,6 +2901,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5113126778090208890, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_Size.x
+      value: 0.0032849254
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113126778090208890, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_Size.y
+      value: 0.028881995
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113126778090208890, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_Size.z
+      value: 0.002855794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113126778090208890, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_Center.x
+      value: 0.0000054120005
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113126778090208890, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_Center.y
+      value: -0.013408486
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113126778090208890, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_Center.z
+      value: 0.00029675258
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424647876895992536, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_AttachTransform
+      value: 
+      objectReference: {fileID: 1574224953}
+    - target: {fileID: 5424647876895992536, guid: c245cd8111b63244ab7099193914d659, type: 3}
+      propertyPath: m_InteractionLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 8183474039321724300, guid: c245cd8111b63244ab7099193914d659, type: 3}
       propertyPath: m_Name
       value: Arrow
@@ -2775,11 +2955,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8852487985008434998, guid: c245cd8111b63244ab7099193914d659, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8852487985008434998, guid: c245cd8111b63244ab7099193914d659, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8852487985008434998, guid: c245cd8111b63244ab7099193914d659, type: 3}
       propertyPath: m_LocalRotation.z
