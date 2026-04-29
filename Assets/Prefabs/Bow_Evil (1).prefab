@@ -108,7 +108,6 @@ GameObject:
   - component: {fileID: 2004243102646076031}
   - component: {fileID: 6009804519819815922}
   - component: {fileID: 732171928266958269}
-  - component: {fileID: 4159935538573941163}
   - component: {fileID: 4809977631842307139}
   - component: {fileID: 1885167387919307631}
   m_Layer: 0
@@ -375,27 +374,6 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
---- !u!114 &4159935538573941163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5922174408302242351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cffc00e23f34039498ff7c2ab3db0ab5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BowLogic
-  lineRenderer: {fileID: 1885167387919307631}
-  pullPoint: {fileID: 3901251120384399893}
-  stringStartPoint: {fileID: 0}
-  nockRestPoint: {fileID: 5498309116724696889}
-  topPoint: {fileID: 1589192105595771277}
-  bottomPoint: {fileID: 45561773108791256}
-  maxPullDistance: 0.6
-  maxLaunchForce: 40
-  arrowRotationOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &4809977631842307139
 MonoBehaviour:
   m_ObjectHideFlags: 0
