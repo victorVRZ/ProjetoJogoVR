@@ -1,150 +1,188 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using System.Collections;
+using System.Collections.Generic;
 
 public class BowLogic : MonoBehaviour
 {
-    [Header("ReferÍncias")]
-    public LineRenderer lineRenderer;
-    public Transform pullPoint;
-    public Transform stringStartPoint;
-    public Transform nockRestPoint; // A seta azul (Z) deve apontar para frente do arco
+    [Header("Pontos do Arco")]
+    public Transform nockRestPoint;
     public Transform topPoint;
     public Transform bottomPoint;
 
-    [Header("ConfiguraÁıes")]
-    public float maxPullDistance = 0.6f;
-    public float maxLaunchForce = 40f;
+    [Header("Visual")]
+    public LineRenderer lineRenderer;
 
-    [Tooltip("Ajuste isso para a flecha n„o ficar paralela (ex: 90 no X ou Y)")]
+    [Header("Configura√ß√µes")]
+    public float maxLaunchForce = 50f;
     public Vector3 arrowRotationOffset;
+    public string arrowTag = "Arrow";
 
+    [Header("L√≥gica de Puxada")]
+    public PullLogic pullLogic;
+
+    private Vector3 nockOriginLocalPos;
     private GameObject currentArrow;
     private XRGrabInteractable arrowInteractable;
-    private float currentPullAmount;
-    private Collider bowCollider;
+    private Transform arrowAttachTransform;
+    private bool isNocked = false;
 
     void Start()
     {
-        // Pega o colisor do arco para ignorar a flecha depois
-        bowCollider = GetComponentInChildren<Collider>();
+        if (nockRestPoint != null)
+        {
+            nockOriginLocalPos = nockRestPoint.localPosition;
+        }
+
+        // Configura√ß√£o obrigat√≥ria do LineRenderer
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 3;
+            lineRenderer.useWorldSpace = true; // Fundamental para SetPosition(worldPos) funcionar
+            Debug.Log("BowLogic: LineRenderer configurado com 3 pontos e World Space.");
+        }
+
+        // Se o PullLogic n√£o estiver atribu√≠do, tenta achar no mesmo objeto
+        if (pullLogic == null) pullLogic = GetComponent<PullLogic>();
+        
+        if (pullLogic != null)
+        {
+            pullLogic.Initialize(transform, nockOriginLocalPos, maxLaunchForce);
+        }
+        else
+        {
+            Debug.LogError("BowLogic: PullLogic n√£o encontrado!");
+        }
+
+        var socket = GetComponentInChildren<XRSocketInteractor>();
+        if (socket != null)
+        {
+            socket.selectEntered.AddListener(OnArrowNocked);
+            socket.selectExited.AddListener(OnArrowUnnocked);
+        }
     }
 
     void Update()
     {
-        // Se houver uma flecha encaixada
-        if (currentArrow != null && arrowInteractable != null)
+        if (isNocked && currentArrow != null && pullLogic != null)
         {
-            // Verificamos se ALGUMA m„o ainda est· segurando a flecha
-            // Usamos interactorsSelecting.Count > 0 porque o Socket tambÈm conta como um interactor
-            if (arrowInteractable.interactorsSelecting.Count > 0)
+            if (pullLogic.ProcessPull(arrowInteractable))
             {
-                // Pegamos a posiÁ„o do primeiro interactor (que deve ser sua m„o)
-                // Se a flecha estiver no socket, o socket È o interactor 0, a m„o È o 1
-                var interactor = arrowInteractable.interactorsSelecting[arrowInteractable.interactorsSelecting.Count - 1];
-
-                Vector3 handPos = interactor.transform.position;
-                UpdateStringPosition(handPos);
-
-                // MantÈm a flecha grudada na corda puxada
-                currentArrow.transform.localPosition = Vector3.zero;
+                Fire();
+            }
+            else
+            {
+                if (!pullLogic.IsPulling)
+                {
+                    pullLogic.ResetPull();
+                }
+                UpdateArrowTransform();
             }
         }
         else
         {
-            ResetString();
+            if (pullLogic != null) pullLogic.ResetPull();
         }
 
         UpdateStringVisuals();
     }
 
+    private void Fire()
+    {
+        if (currentArrow == null || pullLogic == null) return;
+
+        GameObject arrowToFire = currentArrow;
+        XRGrabInteractable interactableToFire = arrowInteractable;
+        var socket = GetComponentInChildren<XRSocketInteractor>();
+
+        // 1. Limpamos o estado do BowLogic PRIMEIRO para parar o UpdateArrowTransform
+        isNocked = false;
+        currentArrow = null;
+        arrowInteractable = null;
+        arrowAttachTransform = null;
+
+        // 2. Delegamos o disparo f√≠sico e a limpeza de XR ao PullLogic
+        pullLogic.FireArrow(arrowToFire, interactableToFire, socket);
+    }
+
+    private void UpdateArrowTransform()
+    {
+        if (currentArrow == null || nockRestPoint == null) return;
+
+        // A flecha deve seguir a posi√ß√£o e a rota√ß√£o do ponto de encaixe (nockRestPoint)
+        currentArrow.transform.position = nockRestPoint.position;
+        
+        // Alinhamento visual: A flecha deve apontar para onde o arco aponta (Z+)
+        // Usamos o forward do arco para garantir que a flecha n√£o "balance" com a m√£o
+        Vector3 bowForward = transform.forward;
+        currentArrow.transform.rotation = Quaternion.LookRotation(bowForward) * Quaternion.Euler(arrowRotationOffset);
+
+        if (arrowAttachTransform != null)
+        {
+            // Se a flecha tiver um ponto de encaixe customizado, compensamos a rota√ß√£o local dele
+            currentArrow.transform.rotation *= Quaternion.Inverse(arrowAttachTransform.localRotation);
+        }
+    }
+
+    // M√©todo Fire removido pois a l√≥gica agora est√° no PullLogic
+
     public void OnArrowNocked(SelectEnterEventArgs args)
     {
-        currentArrow = args.interactableObject.transform.gameObject;
-        arrowInteractable = currentArrow.GetComponent<XRGrabInteractable>();
+        if (args.interactableObject == null) return;
+        SetupNockedArrow(args.interactableObject.transform.gameObject);
+    }
 
-        // --- SOLU«√O PARA O ARCO N√O VOAR ---
-        // Pega todos os colisores do ARCO e da FLECHA
-        Collider[] bowColliders = GetComponentsInChildren<Collider>();
-        Collider[] arrowColliders = currentArrow.GetComponentsInChildren<Collider>();
+    public void NockManual(GameObject arrow)
+    {
+        if (isNocked || arrow == null) return;
+        SetupNockedArrow(arrow);
+    }
 
-        // Diz para a Unity ignorar a colis„o entre CADA parte do arco e CADA parte da flecha
-        foreach (var b in bowColliders)
+    private void SetupNockedArrow(GameObject arrow)
+    {
+        currentArrow = arrow;
+        arrowInteractable = arrow.GetComponent<XRGrabInteractable>();
+        
+        if (arrowInteractable != null)
         {
-            foreach (var a in arrowColliders)
-            {
-                Physics.IgnoreCollision(a, b, true);
-            }
+            arrowAttachTransform = arrowInteractable.attachTransform;
         }
-        // ------------------------------------
 
-        currentArrow.transform.SetParent(pullPoint);
-        currentArrow.transform.localPosition = Vector3.zero;
-        currentArrow.transform.rotation = nockRestPoint.rotation * Quaternion.Euler(arrowRotationOffset);
-
+        isNocked = true;
+        
         Rigidbody rb = currentArrow.GetComponent<Rigidbody>();
-        if (rb)
+        if (rb != null)
         {
             rb.isKinematic = true;
-            rb.useGravity = false; // Garante que a gravidade n„o puxe a flecha pra baixo
+            rb.useGravity = false;
         }
+        
+        UpdateArrowTransform();
     }
 
-    public void ReleaseArrow()
+    public void OnArrowUnnocked(SelectExitEventArgs args)
     {
-        if (currentArrow != null)
+        if (currentArrow != null && args.interactableObject.transform.gameObject == currentArrow)
         {
-            Debug.Log("Atirando flecha com forÁa: " + (currentPullAmount * maxLaunchForce));
-
-            // 1. Desvincula a flecha do pullPoint (corda)
-            currentArrow.transform.SetParent(null);
-
-            // 2. Reativa a fÌsica
-            Rigidbody rb = currentArrow.GetComponent<Rigidbody>();
-            if (rb != null)
+            if (pullLogic != null && !pullLogic.IsBeingHeld(arrowInteractable))
             {
-                rb.isKinematic = false;
-                rb.useGravity = true;
-
-                // 3. Aplica a forÁa na direÁ„o frontal do nockRestPoint
-                // Se currentPullAmount for quase 0, n„o atira (evita tiros por erro)
-                if (currentPullAmount > 0.05f)
-                {
-                    Vector3 forcaDisparo = nockRestPoint.forward * (currentPullAmount * maxLaunchForce);
-                    rb.AddForce(forcaDisparo, ForceMode.Impulse);
-
-                    // Opcional: Adiciona um torque para a flecha girar levemente (estabiliza)
-                    rb.AddRelativeTorque(Vector3.forward * 10, ForceMode.Impulse);
-                }
+                isNocked = false;
+                currentArrow = null;
+                arrowInteractable = null;
+                arrowAttachTransform = null;
             }
-
-            // 4. Limpa as referÍncias para poder pegar a prÛxima flecha
-            currentArrow = null;
-            arrowInteractable = null;
-
-            // 5. Faz a corda voltar ao centro
-            ResetString();
         }
     }
 
-    // ... (Mantenha suas funÁıes UpdateStringPosition e UpdateStringVisuals iguais)
-    public void UpdateStringPosition(Vector3 handWorldPos)
+    private void UpdateStringVisuals()
     {
-        Vector3 localHandPos = transform.InverseTransformPoint(handWorldPos);
-        float zPull = Mathf.Clamp(localHandPos.z, -maxPullDistance, 0);
-        pullPoint.localPosition = new Vector3(0, 0, zPull);
-        currentPullAmount = Mathf.Abs(zPull) / maxPullDistance;
-    }
-
-    void UpdateStringVisuals()
-    {
-        lineRenderer.SetPosition(0, topPoint.position);
-        lineRenderer.SetPosition(1, pullPoint.position);
-        lineRenderer.SetPosition(2, bottomPoint.position);
-    }
-
-    private void ResetString()
-    {
-        pullPoint.localPosition = Vector3.Lerp(pullPoint.localPosition, stringStartPoint.localPosition, Time.deltaTime * 20f);
+        if (lineRenderer != null && topPoint != null && nockRestPoint != null && bottomPoint != null)
+        {
+            lineRenderer.SetPosition(0, topPoint.position);
+            lineRenderer.SetPosition(1, nockRestPoint.position);
+            lineRenderer.SetPosition(2, bottomPoint.position);
+        }
     }
 }
