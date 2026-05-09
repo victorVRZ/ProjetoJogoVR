@@ -2316,6 +2316,7 @@ GameObject:
   - component: {fileID: 1000479874}
   - component: {fileID: 1000479873}
   - component: {fileID: 1000479876}
+  - component: {fileID: 1000479877}
   m_Layer: 0
   m_Name: VR Player
   m_TagString: Untagged
@@ -2396,6 +2397,19 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1000479877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000479872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a36188dea32a434bb835a9ada42201e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestartScene
+  restart: {fileID: -6395602842196007441, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!4 &1057775960 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1589192105595771277, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
