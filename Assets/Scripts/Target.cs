@@ -6,6 +6,9 @@ public class Target : MonoBehaviour
     public float moveSpeed = 2f;
     public float moveRange = 3f;
 
+    [Header("Score")]
+    public int pointValue = 100;
+
     private Vector3 startPosition;
     private float direction = 1f;
     private TargetSpawner spawner;
@@ -40,6 +43,10 @@ public class Target : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Arrow")) 
         {
+            // Adiciona pontos ao acertar
+            if (ScoreManager.Instance != null)
+                ScoreManager.Instance.AddScore(pointValue);
+
             Destroy(collision.gameObject);
             Destroy(gameObject);
             if (spawner != null)
