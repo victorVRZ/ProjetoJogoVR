@@ -66,7 +66,10 @@ public class BowLogic : MonoBehaviour
 
     void Update()
     {
+        
         if (isNocked && currentArrow != null && pullLogic != null)
+            // ... resto do código
+            if (isNocked && currentArrow != null && pullLogic != null)
         {
             if (pullLogic.ProcessPull(arrowInteractable))
             {
