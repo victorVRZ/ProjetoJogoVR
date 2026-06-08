@@ -8,15 +8,12 @@ using System.Collections;
 public class PullLogic : MonoBehaviour
 {
     [Header("Feedback Visual da Puxada")]
-    // Renderer da flecha que terá a cor alterada
-    public Renderer arrowRenderer;
-
     // Cores para cada nível de força
     public Color colorWeak = Color.green;
     public Color colorMedium = Color.yellow;
     public Color colorStrong = Color.red;
 
-    // Nome da propriedade de cor no material da flecha (padrão Unity: "_Color" ou "_BaseColor" para URP)
+    // Nome da propriedade de cor no shader (_BaseColor para URP, _Color para Built-in)
     public string colorPropertyName = "_BaseColor";
 
     [Header("Configurações de Puxada")]
@@ -33,6 +30,9 @@ public class PullLogic : MonoBehaviour
     private Transform bowTransform;
     private bool isPulling = false;
 
+    // Renderer da flecha atual — atribuído pelo BowLogic ao encaixar
+    private Renderer currentArrowRenderer;
+
     public float CurrentPullAmount => currentPullAmount;
     public bool IsPulling => isPulling;
 
@@ -42,6 +42,20 @@ public class PullLogic : MonoBehaviour
         nockOriginLocalPos = originLocalPos;
         maxLaunchForce = force;
         Debug.Log($"PullLogic Initialized: Bow={bow.name}, OriginLocal={nockOriginLocalPos}, MaxForce={force}");
+    }
+
+    // Chamado pelo BowLogic ao encaixar a flecha — passa o renderer da flecha atual
+    public void SetArrowRenderer(Renderer renderer)
+    {
+        currentArrowRenderer = renderer;
+
+        if (currentArrowRenderer == null)
+            Debug.LogWarning("[PullLogic] SetArrowRenderer: renderer recebido é null.");
+        else
+            Debug.Log("[PullLogic] SetArrowRenderer: renderer atribuído — " + currentArrowRenderer.gameObject.name);
+
+        // Reseta a cor para verde ao encaixar
+        ResetArrowColor();
     }
 
     /// <summary>
@@ -78,18 +92,12 @@ public class PullLogic : MonoBehaviour
                 Vector3 handLocalPos = bowTransform.InverseTransformPoint(handWorldPos);
 
                 float zDiff = handLocalPos.z - nockOriginLocalPos.z;
-
-                // Baseado nos logs, o arco puxa no sentido POSITIVO do Z.
                 float pullZ = Mathf.Clamp(zDiff, 0, maxPullDistance);
-
                 currentPullAmount = pullZ / maxPullDistance;
 
                 Debug.Log($"[PULL DEBUG] pullZ={pullZ:F4}, currentPull={currentPullAmount:F4}, maxDist={maxPullDistance:F2}");
 
-                Debug.Log("[PullLogic] COR DEBUG: currentPullAmount=" + currentPullAmount.ToString("F4") +
-          " | Threshold verde-amarelo=0.4 | Threshold amarelo-vermelho=0.8");
-
-                // Adiciona essa linha logo abaixo:
+                // Atualiza a cor da flecha
                 UpdateArrowColor();
 
                 nockRestPoint.localPosition = new Vector3(nockOriginLocalPos.x, nockOriginLocalPos.y, nockOriginLocalPos.z + pullZ);
@@ -118,7 +126,7 @@ public class PullLogic : MonoBehaviour
 
         Debug.Log($"[FIRE] Iniciando disparo: Força={force:F2}, Direção={shootDirection}, Pull={currentPullAmount:F2}");
 
-        // 1. Desativar o socket de forma agressiva
+        // 1. Desativar o socket
         if (socket != null)
         {
             socket.socketActive = false;
@@ -126,7 +134,7 @@ public class PullLogic : MonoBehaviour
             StartCoroutine(ReenableSocket(socket));
         }
 
-        // 2. Forçar a saída de TODOS os seletores e desabilitar o interactable temporariamente
+        // 2. Forçar saída de todos os seletores
         if (interactable != null)
         {
             if (interactable.interactionManager != null)
@@ -151,10 +159,7 @@ public class PullLogic : MonoBehaviour
             rb.useGravity = true;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-
-            // Pequeno deslocamento para garantir que a flecha não nasça "dentro" do arco
             arrow.transform.position += shootDirection * 0.05f;
-
             rb.AddForce(shootDirection * force, ForceMode.Impulse);
             Debug.Log($"[FIRE] Impulso aplicado. Nova Velocidade: {rb.linearVelocity.magnitude:F2} m/s");
         }
@@ -166,6 +171,9 @@ public class PullLogic : MonoBehaviour
         {
             StartCoroutine(IgnoreCollisionTemporarily(arrowCol, bowCol));
         }
+
+        // Limpa o renderer antes de resetar
+        currentArrowRenderer = null;
 
         ResetImmediate();
     }
@@ -210,9 +218,6 @@ public class PullLogic : MonoBehaviour
             nockRestPoint.localPosition = nockOriginLocalPos;
         currentPullAmount = 0f;
         isPulling = false;
-
-        // Adiciona essa linha:
-        ResetArrowColor();
     }
 
     private IXRSelectInteractor GetHandInteractor(XRGrabInteractable interactable)
@@ -244,60 +249,18 @@ public class PullLogic : MonoBehaviour
         }
         return false;
     }
-    // Atualiza a cor da flecha baseado no nível de puxada atual
-    // Busca o renderer diretamente na flecha atual em vez de depender do Inspector
-    private Renderer GetCurrentArrowRenderer()
-    {
-        // Percorre os filhos do nockRestPoint para achar a flecha atual
-        if (nockRestPoint == null)
-        {
-            Debug.LogError("[PullLogic] COR: nockRestPoint é null!");
-            return null;
-        }
 
-        // Tenta achar o renderer no arrowRenderer atribuído manualmente
-        if (arrowRenderer != null && arrowRenderer.gameObject.activeInHierarchy)
-        {
-            Debug.Log("[PullLogic] COR: Usando arrowRenderer do Inspector: " + arrowRenderer.gameObject.name);
-            return arrowRenderer;
-        }
-
-        // Se não tiver ou estiver inativo, busca automaticamente pela tag Arrow na cena
-        GameObject arrowObj = GameObject.FindGameObjectWithTag("Arrow");
-        if (arrowObj != null)
-        {
-            Renderer r = arrowObj.GetComponentInChildren<Renderer>();
-            if (r != null)
-            {
-                Debug.Log("[PullLogic] COR: Renderer encontrado automaticamente na flecha: " + arrowObj.name);
-                return r;
-            }
-            else
-            {
-                Debug.LogError("[PullLogic] COR: Flecha encontrada mas SEM Renderer! " +
-                               "O prefab da flecha tem um MeshRenderer?");
-            }
-        }
-        else
-        {
-            Debug.LogError("[PullLogic] COR: Nenhuma flecha com tag 'Arrow' encontrada na cena! " +
-                           "Verifique se o prefab da flecha tem a tag 'Arrow' configurada.");
-        }
-
-        return null;
-    }
-
+    // Atualiza a cor baseado no currentPullAmount atual
     private void UpdateArrowColor()
     {
-        Renderer renderer = GetCurrentArrowRenderer();
+        if (currentArrowRenderer == null) return;
+        if (currentArrowRenderer.material == null) return;
 
-        if (renderer == null) return;
-
-        if (!renderer.material.HasProperty(colorPropertyName))
+        if (!currentArrowRenderer.material.HasProperty(colorPropertyName))
         {
-            Debug.LogError("[PullLogic] COR: Shader '" + renderer.material.shader.name +
-                           "' não tem propriedade '" + colorPropertyName + "'. " +
-                           "Troca para '_Color' se usar Built-in ou '_BaseColor' se usar URP.");
+            Debug.LogError("[PullLogic] COR: Shader '" + currentArrowRenderer.material.shader.name +
+                           "' não tem a propriedade '" + colorPropertyName + "'. " +
+                           "Troca para '_Color' (Built-in) ou '_BaseColor' (URP).");
             return;
         }
 
@@ -318,19 +281,19 @@ public class PullLogic : MonoBehaviour
             targetColor = colorStrong;
         }
 
-        renderer.material.SetColor(colorPropertyName, targetColor);
+        currentArrowRenderer.material.SetColor(colorPropertyName, targetColor);
 
         Debug.Log("[PullLogic] COR: Pull=" + currentPullAmount.ToString("F2") +
-                  " | Cor=" + targetColor +
-                  " | Shader=" + renderer.material.shader.name);
+                  " | Cor=" + targetColor);
     }
 
+    // Reseta a cor para verde
     private void ResetArrowColor()
     {
-        Renderer renderer = GetCurrentArrowRenderer();
-        if (renderer == null) return;
+        if (currentArrowRenderer == null) return;
+        if (currentArrowRenderer.material == null) return;
 
-        renderer.material.SetColor(colorPropertyName, colorWeak);
-        Debug.Log("[PullLogic] COR RESET: Cor resetada para verde.");
+        currentArrowRenderer.material.SetColor(colorPropertyName, colorWeak);
+        Debug.Log("[PullLogic] COR RESET: cor resetada para verde.");
     }
 }

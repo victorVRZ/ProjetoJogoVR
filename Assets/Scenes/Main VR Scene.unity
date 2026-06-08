@@ -2695,7 +2695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &818352704
 Transform:
   m_ObjectHideFlags: 0
@@ -6409,11 +6409,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 736c12856763ab2428a6bea472f34022, type: 3}
   m_PrefabInstance: {fileID: 1641482645}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &1641482653 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 736c12856763ab2428a6bea472f34022, type: 3}
-  m_PrefabInstance: {fileID: 1641482645}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1645006844
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7312,7 +7307,7 @@ MonoBehaviour:
   topPoint: {fileID: 1057775960}
   bottomPoint: {fileID: 59090204}
   lineRenderer: {fileID: 0}
-  maxLaunchForce: 40
+  maxLaunchForce: 50
   arrowRotationOffset: {x: 90, y: 0, z: 0}
   arrowTag: Arrow
   pullLogic: {fileID: 1735893222}
@@ -7341,14 +7336,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbefc0ebb887c147b1b4309ac7b2b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PullLogic
-  arrowRenderer: {fileID: 1641482653}
   colorWeak: {r: 0, g: 1, b: 0, a: 1}
   colorMedium: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   colorStrong: {r: 1, g: 0, b: 0, a: 1}
   colorPropertyName: _BaseColor
   nockRestPoint: {fileID: 636201243}
-  maxPullDistance: 0.05
-  maxLaunchForce: 600
+  maxPullDistance: 5
+  maxLaunchForce: 700
   fireAction: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!4 &1735893228 stripped
 Transform:
@@ -9062,8 +9056,7 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1885167387919307631, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7950926127476929179, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}
     - {fileID: 5231382024178982432, guid: 00a5ac44cadc1bb47ac82a81c5cce614, type: 3}

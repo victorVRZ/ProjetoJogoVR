@@ -147,21 +147,26 @@ public class BowLogic : MonoBehaviour
     {
         currentArrow = arrow;
         arrowInteractable = arrow.GetComponent<XRGrabInteractable>();
-        
+
         if (arrowInteractable != null)
-        {
             arrowAttachTransform = arrowInteractable.attachTransform;
-        }
 
         isNocked = true;
-        
+
         Rigidbody rb = currentArrow.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = true;
             rb.useGravity = false;
         }
-        
+
+        // LINHA NOVA — passa o renderer da flecha para o PullLogic
+        if (pullLogic != null)
+        {
+            Renderer arrowRend = arrow.GetComponentInChildren<Renderer>();
+            pullLogic.SetArrowRenderer(arrowRend);
+        }
+
         UpdateArrowTransform();
     }
 
