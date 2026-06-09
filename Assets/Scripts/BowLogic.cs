@@ -100,13 +100,16 @@ public class BowLogic : MonoBehaviour
         XRGrabInteractable interactableToFire = arrowInteractable;
         var socket = GetComponentInChildren<XRSocketInteractor>();
 
-        // 1. Limpamos o estado do BowLogic PRIMEIRO para parar o UpdateArrowTransform
+        // LINHA NOVA — avisa o spawner que a flecha foi disparada
+        Arrow arrowScript = arrowToFire.GetComponent<Arrow>();
+        if (arrowScript != null)
+            arrowScript.OnFired();
+
         isNocked = false;
         currentArrow = null;
         arrowInteractable = null;
         arrowAttachTransform = null;
 
-        // 2. Delegamos o disparo físico e a limpeza de XR ao PullLogic
         pullLogic.FireArrow(arrowToFire, interactableToFire, socket);
     }
 
