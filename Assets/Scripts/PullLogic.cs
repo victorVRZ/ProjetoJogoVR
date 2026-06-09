@@ -18,7 +18,7 @@ public class PullLogic : MonoBehaviour
 
     [Header("Configurações de Puxada")]
     public Transform nockRestPoint;
-    public float maxPullDistance = 0.5f;
+    public float maxPullDistance = 0.25f;
     public float maxLaunchForce = 50f;
 
     [Header("Input")]
@@ -91,16 +91,16 @@ public class PullLogic : MonoBehaviour
                 Vector3 handWorldPos = pullingHand.transform.position;
                 Vector3 handLocalPos = bowTransform.InverseTransformPoint(handWorldPos);
 
-                float zDiff = handLocalPos.z - nockOriginLocalPos.z;
-                float pullZ = Mathf.Clamp(zDiff, 0, maxPullDistance);
-                currentPullAmount = pullZ / maxPullDistance;
+                float xDiff = handLocalPos.x - nockOriginLocalPos.x;
+                float pullX = maxPullDistance > 0f ? Mathf.Clamp(xDiff, 0f, maxPullDistance) : Mathf.Clamp(xDiff, maxPullDistance, 0f);
+                currentPullAmount = pullX / maxPullDistance;
 
-                Debug.Log($"[PULL DEBUG] pullZ={pullZ:F4}, currentPull={currentPullAmount:F4}, maxDist={maxPullDistance:F2}");
+                Debug.Log($"[PULL DEBUG] pullZ={pullX:F4}, currentPull={currentPullAmount:F4}, maxDist={maxPullDistance:F2}");
 
                 // Atualiza a cor da flecha
                 UpdateArrowColor();
 
-                nockRestPoint.localPosition = new Vector3(nockOriginLocalPos.x, nockOriginLocalPos.y, nockOriginLocalPos.z + pullZ);
+                nockRestPoint.localPosition = new Vector3(nockOriginLocalPos.x + pullX, nockOriginLocalPos.y, nockOriginLocalPos.z);
 
                 return false;
             }

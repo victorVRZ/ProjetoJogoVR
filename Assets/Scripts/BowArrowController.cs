@@ -44,8 +44,8 @@ public class BowArrowController : MonoBehaviour
     [Header("PullLogic — Configurações de Puxada")]
 
     // Distância máxima que a corda pode ser puxada (em metros)
-    [Range(0.1f, 1f)]
-    public float maxPullDistance = 0.5f;
+    [Range(-1f, 1f)]
+    public float maxPullDistance = -0.25f;
 
     // -------------------------------------------------------------------------
     // UNITY CALLBACKS
