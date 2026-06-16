@@ -24,7 +24,8 @@ public class LeaderboardUI : MonoBehaviour
     public Color botColor = Color.white;
 
     [Header("Botão de Restart")]
-    public Button restartButton;
+    // Arraste o GameObject do botão físico 3D aqui
+    public WorldSpaceRestartButton restartButton;
 
     void Start()
     {
@@ -35,12 +36,7 @@ public class LeaderboardUI : MonoBehaviour
             leaderboardPanel.SetActive(false);
         else
             Debug.LogError("[LeaderboardUI] ERRO: leaderboardPanel não atribuído!");
-
-        // Configura o botão de restart
-        if (restartButton != null)
-            restartButton.onClick.AddListener(RestartGame);
-        else
-            Debug.LogError("[LeaderboardUI] ERRO: restartButton não atribuído!");
+       
     }
 
     // Chamado pelo GameTimer quando o tempo acaba
@@ -103,14 +99,30 @@ public class LeaderboardUI : MonoBehaviour
                       " | Score: " + entry.score + " | Bônus: " + bonus);
         }
 
+        Debug.Log("[LeaderboardUI] Exibindo leaderboard...");
+
+        // Congela o jogo
+        Time.timeScale = 0f;
+
         // Exibe o painel
         if (leaderboardPanel != null)
             leaderboardPanel.SetActive(true);
+
+        // Ativa o botão físico junto com a leaderboard
+        if (restartButton != null)
+            restartButton.gameObject.SetActive(true);
+        else
+            Debug.LogWarning("[LeaderboardUI] AVISO: restartButton físico não atribuído!");
     }
 
     // Reinicia a cena ao clicar no botão
     void RestartGame()
     {
+        Debug.Log("[LeaderboardUI] Reiniciando cena...");
+
+        // Descongela o jogo antes de reiniciar
+        Time.timeScale = 1f;
+
         Debug.Log("[LeaderboardUI] Reiniciando cena...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

@@ -1465,10 +1465,10 @@ MonoBehaviour:
   - Bot 1
   - Bot 2
   - Bot 3
-  firstPlaceBonus: 5000
-  secondPlaceBonus: 3500
-  thirdPlaceBonus: 2000
-  fourthPlaceBonus: 1000
+  firstPlaceBonus: 0
+  secondPlaceBonus: 0
+  thirdPlaceBonus: 0
+  fourthPlaceBonus: 0
 --- !u!1 &433316523
 GameObject:
   m_ObjectHideFlags: 0
@@ -2524,6 +2524,37 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.19000006, y: 0.277, z: -6.39}
   m_LocalScale: {x: 6.03, y: 0.57, z: 0.44}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &754379123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 754379124}
+  m_Layer: 0
+  m_Name: RestartButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &754379124
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754379123}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.66848, y: 0.0005, z: 10.66971}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3695,7 +3726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1140611915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3809,7 +3840,7 @@ MonoBehaviour:
   - {fileID: 1819443275}
   playerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   botColor: {r: 1, g: 1, b: 1, a: 1}
-  restartButton: {fileID: 1486912551}
+  restartButton: {fileID: 0}
 --- !u!1 &1168236169
 GameObject:
   m_ObjectHideFlags: 0
@@ -8096,3 +8127,4 @@ SceneRoots:
   - {fileID: 1563598563}
   - {fileID: 384680717}
   - {fileID: 1140611918}
+  - {fileID: 754379124}
