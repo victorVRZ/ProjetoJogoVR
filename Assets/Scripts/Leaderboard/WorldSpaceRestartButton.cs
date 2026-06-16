@@ -88,6 +88,9 @@ public class WorldSpaceRestartButton : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("[RestartButton] TRIGGER ATIVADO por: " + other.gameObject.name +
+              " | Tag: " + other.tag + " | Layer: " + other.gameObject.layer);
+
         if (activated) return;
 
         if (other.CompareTag(handTag))
@@ -95,11 +98,7 @@ public class WorldSpaceRestartButton : MonoBehaviour
             handInside = true;
             handTimer = 0f;
             SetColor(hoverColor);
-            Debug.Log("[RestartButton] Mão entrou no botão. Segure por " + activationDelay + "s para ativar.");
-        }
-        else
-        {
-            Debug.Log("[RestartButton] Objeto entrou no trigger mas não é mão: " + other.gameObject.name);
+            Debug.Log("[RestartButton] Mão detectada!");
         }
     }
 
