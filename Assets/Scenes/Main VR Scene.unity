@@ -1462,7 +1462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LeaderboardManager
   playerName: Victor
   botNames:
-  - Bot 1
+  - Bot
   - Bot 2
   - Bot 3
   firstPlaceBonus: 0
