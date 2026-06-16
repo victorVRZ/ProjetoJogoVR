@@ -25,6 +25,9 @@ public class Bot : MonoBehaviour
     // Contador interno para controlar o intervalo de tiro
     private float shootTimer;
 
+    // Acumula a pontuação total do bot durante a partida
+    private int totalBotScore = 0;
+
     // -------------------------------------------------------------------------
     // UNITY CALLBACKS
     // -------------------------------------------------------------------------
@@ -54,10 +57,7 @@ public class Bot : MonoBehaviour
 
         if (shootTimer <= 0f)
         {
-            // Reseta o timer
             shootTimer = shootInterval;
-
-            // Tenta atirar
             TryShoot();
         }
     }
@@ -86,7 +86,6 @@ public class Bot : MonoBehaviour
 
         if (roll <= hitChance)
         {
-            // ACERTOU
             Debug.Log("[Bot] ACERTOU o alvo!");
 
             BotTarget botTarget = target.GetComponent<BotTarget>();
@@ -97,12 +96,20 @@ public class Bot : MonoBehaviour
                 return;
             }
 
-            // Chama o método de acerto no alvo
+            // Acerta o alvo e soma os pontos ao total do bot
             botTarget.GetHit();
+            totalBotScore += botTarget.pointValue;
+
+            Debug.Log("[Bot] Score acumulado do bot: " + totalBotScore);
+
+            // Atualiza o LeaderboardManager com o score atual do bot
+            if (LeaderboardManager.Instance != null)
+                LeaderboardManager.Instance.SetBotScore(gameObject.name, totalBotScore);
+            else
+                Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado na cena!");
         }
         else
         {
-            // ERROU
             Debug.Log("[Bot] ERROU o alvo. (Rolagem " + roll.ToString("F1") +
                       " foi maior que " + hitChance + "%)");
         }
