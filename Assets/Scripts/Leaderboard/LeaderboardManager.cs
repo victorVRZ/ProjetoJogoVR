@@ -5,19 +5,8 @@ public class LeaderboardManager : MonoBehaviour
 {
     public static LeaderboardManager Instance { get; private set; }
 
-    [Header("Configurações dos Participantes")]
-    // Nome do player
+    [Header("Configurações do Player")]
     public string playerName = "Player";
-
-    // Nomes dos bots (adiciona quantos bots tiver no jogo)
-    public string[] botNames = { "Bot 1", "Bot 2", "Bot 3" };
-
-    [Header("Pontos por Colocação")]
-    // Pontos extras concedidos ao final por colocação
-    public int firstPlaceBonus = 5000;
-    public int secondPlaceBonus = 3500;
-    public int thirdPlaceBonus = 2000;
-    public int fourthPlaceBonus = 1000;
 
     // Lista interna de participantes
     private List<LeaderboardEntry> entries = new List<LeaderboardEntry>();
@@ -32,24 +21,30 @@ public class LeaderboardManager : MonoBehaviour
         Instance = this;
 
         Debug.Log("[LeaderboardManager] Iniciado.");
-        InitializeEntries();
-    }
 
-    // Cria as entradas iniciais com score 0
-    void InitializeEntries()
-    {
         entries.Clear();
-
-        // Adiciona o player
         entries.Add(new LeaderboardEntry(playerName, 0, true));
         Debug.Log("[LeaderboardManager] Player adicionado: " + playerName);
+    }
 
-        // Adiciona os bots
-        foreach (string botName in botNames)
+    // Chamado pelo Bot no Start() para se registrar automaticamente
+    public void RegisterBot(Bot bot)
+    {
+        if (bot == null)
         {
-            entries.Add(new LeaderboardEntry(botName, 0, false));
-            Debug.Log("[LeaderboardManager] Bot adicionado: " + botName);
+            Debug.LogError("[LeaderboardManager] ERRO: RegisterBot recebeu referência null!");
+            return;
         }
+
+        LeaderboardEntry existing = entries.Find(e => e.name == bot.gameObject.name && !e.isPlayer);
+        if (existing != null)
+        {
+            Debug.LogWarning("[LeaderboardManager] AVISO: Bot '" + bot.gameObject.name + "' já registrado. Ignorando.");
+            return;
+        }
+
+        entries.Add(new LeaderboardEntry(bot.gameObject.name, 0, false));
+        Debug.Log("[LeaderboardManager] Bot registrado: " + bot.gameObject.name);
     }
 
     // Atualiza a pontuação do player
@@ -63,22 +58,28 @@ public class LeaderboardManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[LeaderboardManager] AVISO: Player não encontrado na lista!");
+            Debug.LogWarning("[LeaderboardManager] AVISO: Player não encontrado!");
         }
     }
 
-    // Atualiza a pontuação de um bot pelo nome
-    public void SetBotScore(string botName, int score)
+    // Atualiza a pontuação de um bot pela referência direta
+    public void SetBotScore(Bot bot, int score)
     {
-        LeaderboardEntry bot = entries.Find(e => e.name == botName && !e.isPlayer);
-        if (bot != null)
+        if (bot == null)
         {
-            bot.score = score;
-            Debug.Log("[LeaderboardManager] Score do bot '" + botName + "' atualizado: " + score);
+            Debug.LogError("[LeaderboardManager] ERRO: SetBotScore recebeu referência null!");
+            return;
+        }
+
+        LeaderboardEntry entry = entries.Find(e => e.name == bot.gameObject.name && !e.isPlayer);
+        if (entry != null)
+        {
+            entry.score = score;
+            Debug.Log("[LeaderboardManager] Score do bot '" + bot.gameObject.name + "' atualizado: " + score);
         }
         else
         {
-            Debug.LogWarning("[LeaderboardManager] AVISO: Bot '" + botName + "' não encontrado!");
+            Debug.LogWarning("[LeaderboardManager] AVISO: Bot '" + bot.gameObject.name + "' não encontrado!");
         }
     }
 
@@ -93,18 +94,5 @@ public class LeaderboardManager : MonoBehaviour
             Debug.Log("  " + (i + 1) + "º - " + ranked[i].name + ": " + ranked[i].score + " pts");
 
         return ranked;
-    }
-
-    // Retorna o bônus de pontos para cada colocação
-    public int GetPlacementBonus(int placement)
-    {
-        switch (placement)
-        {
-            case 1: return firstPlaceBonus;
-            case 2: return secondPlaceBonus;
-            case 3: return thirdPlaceBonus;
-            case 4: return fourthPlaceBonus;
-            default: return 0;
-        }
     }
 }

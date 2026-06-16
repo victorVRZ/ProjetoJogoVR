@@ -2,10 +2,6 @@ using UnityEngine;
 
 public class Bot : MonoBehaviour
 {
-    // -------------------------------------------------------------------------
-    // VARIÁVEIS PÚBLICAS
-    // -------------------------------------------------------------------------
-
     [Header("Configurações de Tiro")]
     // Intervalo em segundos entre cada tentativa de tiro
     public float shootInterval = 2f;
@@ -28,16 +24,12 @@ public class Bot : MonoBehaviour
     // Acumula a pontuação total do bot durante a partida
     private int totalBotScore = 0;
 
+    // Controla se o bot está parado
     private bool isStopped = false;
 
     // -------------------------------------------------------------------------
     // UNITY CALLBACKS
     // -------------------------------------------------------------------------
-    public void StopBot()
-    {
-        isStopped = true;
-        Debug.Log("[Bot] Bot parado.");
-    }
 
     void Start()
     {
@@ -45,21 +37,23 @@ public class Bot : MonoBehaviour
                   " | Intervalo: " + shootInterval + "s" +
                   " | Chance de acerto: " + hitChance + "%");
 
-        if (targetSpawner == null || isStopped) return;
-        {
-            Debug.LogError("[Bot] ERRO: targetSpawner não atribuído no Inspector! " +
-                           "Arraste o BotTargetSpawner no campo 'Target Spawner'.");
-        }
+        if (targetSpawner == null)
+            Debug.LogError("[Bot] ERRO: targetSpawner não atribuído no Inspector!");
 
-        // Inicializa o timer já no intervalo para atirar logo no início
+        // Registra este bot no LeaderboardManager automaticamente
+        if (LeaderboardManager.Instance != null)
+            LeaderboardManager.Instance.RegisterBot(this);
+        else
+            Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado! " +
+                             "O bot não será registrado na leaderboard.");
+
         shootTimer = shootInterval;
     }
 
     void Update()
     {
-        if (targetSpawner == null) return;
+        if (targetSpawner == null || isStopped) return;
 
-        // Conta o tempo até o próximo tiro
         shootTimer -= Time.deltaTime;
 
         if (shootTimer <= 0f)
@@ -70,6 +64,17 @@ public class Bot : MonoBehaviour
     }
 
     // -------------------------------------------------------------------------
+    // MÉTODOS PÚBLICOS
+    // -------------------------------------------------------------------------
+
+    // Chamado pelo LeaderboardUI para parar o bot
+    public void StopBot()
+    {
+        isStopped = true;
+        Debug.Log("[Bot] Bot parado: " + gameObject.name);
+    }
+
+    // -------------------------------------------------------------------------
     // MÉTODOS PRIVADOS
     // -------------------------------------------------------------------------
 
@@ -77,18 +82,15 @@ public class Bot : MonoBehaviour
     {
         Debug.Log("[Bot] Tentando atirar...");
 
-        // Pega o alvo atual do spawner
         GameObject target = targetSpawner.GetCurrentTarget();
 
         if (target == null)
         {
-            Debug.LogWarning("[Bot] AVISO: Nenhum alvo disponível no momento. Tiro cancelado.");
+            Debug.LogWarning("[Bot] AVISO: Nenhum alvo disponível. Tiro cancelado.");
             return;
         }
 
-        // Sorteia um número de 0 a 100 para determinar se acerta
         float roll = Random.Range(0f, 100f);
-
         Debug.Log("[Bot] Rolagem: " + roll.ToString("F1") + " | Necessário: abaixo de " + hitChance);
 
         if (roll <= hitChance)
@@ -103,22 +105,16 @@ public class Bot : MonoBehaviour
                 return;
             }
 
+            // Soma os pontos retornados pelo GetHit()
             totalBotScore += botTarget.GetHit();
 
-            Debug.Log("[Bot] Score acumulado do bot: " + totalBotScore);
+            Debug.Log("[Bot] Score acumulado: " + totalBotScore);
 
-            // Atualiza o LeaderboardManager com o score atual do bot
+            // Atualiza passando a própria referência — sem depender de nome
             if (LeaderboardManager.Instance != null)
-                LeaderboardManager.Instance.SetBotScore(gameObject.name, totalBotScore);
+                LeaderboardManager.Instance.SetBotScore(this, totalBotScore);
             else
-                Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado na cena!");
-
-            if (LeaderboardManager.Instance != null)
-            {
-                Debug.Log("[Bot] Enviando score ao LeaderboardManager — Nome: '" +
-                          gameObject.name + "' | Score: " + totalBotScore);
-                LeaderboardManager.Instance.SetBotScore(gameObject.name, totalBotScore);
-            }
+                Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado!");
         }
         else
         {
