@@ -42,10 +42,8 @@ public class BotTarget : MonoBehaviour
 
     void Update()
     {
-        // Calcula o offset atual em relação à posição inicial
         float currentOffset = transform.position.x - startPosition.x;
 
-        // Inverte direção ao atingir o limite
         if (currentOffset >= moveRange)
             direction = -1f;
         else if (currentOffset <= -moveRange)
@@ -58,7 +56,6 @@ public class BotTarget : MonoBehaviour
     // MÉTODOS PÚBLICOS
     // -------------------------------------------------------------------------
 
-    // Chamado pelo BotTargetSpawner ao instanciar este alvo
     public void SetSpawner(BotTargetSpawner spawnerRef)
     {
         if (spawnerRef == null)
@@ -71,16 +68,10 @@ public class BotTarget : MonoBehaviour
         Debug.Log("[BotTarget] Spawner atribuído: " + spawner.gameObject.name);
     }
 
-    // Chamado pelo Bot quando acerta este alvo
-    public void GetHit()
+    // Chamado pelo Bot quando acerta este alvo — retorna os pontos para o Bot gerenciar
+    public int GetHit()
     {
-        Debug.Log("[BotTarget] Alvo acertado pelo bot! Somando " + pointValue + " pontos.");
-
-        // Adiciona pontos ao ScoreManager
-        if (ScoreManager.Instance != null)
-            ScoreManager.Instance.AddScore(pointValue);
-        else
-            Debug.LogWarning("[BotTarget] AVISO: ScoreManager não encontrado na cena!");
+        Debug.Log("[BotTarget] Alvo acertado pelo bot! Valor: " + pointValue + " pontos.");
 
         // Avisa o spawner para recriar o alvo
         if (spawner != null)
@@ -89,5 +80,8 @@ public class BotTarget : MonoBehaviour
             Debug.LogWarning("[BotTarget] AVISO: Spawner é null ao tentar notificar!");
 
         Destroy(gameObject);
+
+        // Retorna o valor dos pontos para o Bot somar no seu próprio score
+        return pointValue;
     }
 }

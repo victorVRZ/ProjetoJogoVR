@@ -103,9 +103,7 @@ public class Bot : MonoBehaviour
                 return;
             }
 
-            // Acerta o alvo e soma os pontos ao total do bot
-            botTarget.GetHit();
-            totalBotScore += botTarget.pointValue;
+            totalBotScore += botTarget.GetHit();
 
             Debug.Log("[Bot] Score acumulado do bot: " + totalBotScore);
 
@@ -114,6 +112,13 @@ public class Bot : MonoBehaviour
                 LeaderboardManager.Instance.SetBotScore(gameObject.name, totalBotScore);
             else
                 Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado na cena!");
+
+            if (LeaderboardManager.Instance != null)
+            {
+                Debug.Log("[Bot] Enviando score ao LeaderboardManager — Nome: '" +
+                          gameObject.name + "' | Score: " + totalBotScore);
+                LeaderboardManager.Instance.SetBotScore(gameObject.name, totalBotScore);
+            }
         }
         else
         {
