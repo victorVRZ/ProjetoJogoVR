@@ -27,6 +27,9 @@ public class LeaderboardUI : MonoBehaviour
     // Arraste o GameObject do botão físico 3D aqui
     public WorldSpaceRestartButton restartButton;
 
+    [Header("Bots")]
+    public Bot[] bots;
+
     void Start()
     {
         Debug.Log("[LeaderboardUI] Iniciado.");
@@ -101,8 +104,6 @@ public class LeaderboardUI : MonoBehaviour
 
         Debug.Log("[LeaderboardUI] Exibindo leaderboard...");
 
-        // Congela o jogo
-        Time.timeScale = 0f;
 
         // Exibe o painel
         if (leaderboardPanel != null)
@@ -113,6 +114,12 @@ public class LeaderboardUI : MonoBehaviour
             restartButton.gameObject.SetActive(true);
         else
             Debug.LogWarning("[LeaderboardUI] AVISO: restartButton físico não atribuído!");
+
+        foreach (Bot bot in bots)
+        {
+            if (bot != null)
+                bot.StopBot();
+        }
     }
 
     // Reinicia a cena ao clicar no botão

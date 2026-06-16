@@ -2504,14 +2504,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 754379123}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.467, y: 0.777, z: 0.685}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -40.7, y: -70.3, z: -131.5}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 515310772}
   - {fileID: 1336664789}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1692321911}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &754379125
 MonoBehaviour:
@@ -3814,6 +3814,7 @@ MonoBehaviour:
   playerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   botColor: {r: 1, g: 1, b: 1, a: 1}
   restartButton: {fileID: 754379125}
+  bots: []
 --- !u!1 &1168236169
 GameObject:
   m_ObjectHideFlags: 0
@@ -6239,6 +6240,7 @@ RectTransform:
   - {fileID: 1795025745}
   - {fileID: 1489906677}
   - {fileID: 1682749494}
+  - {fileID: 754379124}
   m_Father: {fileID: 1140611918}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -8031,4 +8033,3 @@ SceneRoots:
   - {fileID: 1563598563}
   - {fileID: 384680717}
   - {fileID: 1140611918}
-  - {fileID: 754379124}

@@ -64,14 +64,12 @@ public class GameTimer : MonoBehaviour
 
     void TimeUp()
     {
-        // Exibe a leaderboard ao invés de reiniciar direto
+        isRunning = false; // para o timer sem congelar a cena
+
         if (leaderboardUI != null)
             leaderboardUI.ShowLeaderboard();
         else
-        {
-            Debug.LogWarning("[GameTimer] LeaderboardUI não encontrado. Reiniciando diretamente.");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
     }
 
     public void SetRunning(bool running)

@@ -28,9 +28,16 @@ public class Bot : MonoBehaviour
     // Acumula a pontuação total do bot durante a partida
     private int totalBotScore = 0;
 
+    private bool isStopped = false;
+
     // -------------------------------------------------------------------------
     // UNITY CALLBACKS
     // -------------------------------------------------------------------------
+    public void StopBot()
+    {
+        isStopped = true;
+        Debug.Log("[Bot] Bot parado.");
+    }
 
     void Start()
     {
@@ -38,7 +45,7 @@ public class Bot : MonoBehaviour
                   " | Intervalo: " + shootInterval + "s" +
                   " | Chance de acerto: " + hitChance + "%");
 
-        if (targetSpawner == null)
+        if (targetSpawner == null || isStopped) return;
         {
             Debug.LogError("[Bot] ERRO: targetSpawner não atribuído no Inspector! " +
                            "Arraste o BotTargetSpawner no campo 'Target Spawner'.");
