@@ -1753,7 +1753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9f594060abe9684a88b1450891352fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameTimer
-  totalTime: 5
+  totalTime: 100
   timerText: {fileID: 2146021909}
   leaderboardUI: {fileID: 1140611919}
 --- !u!1 &563237645 stripped
@@ -3185,7 +3185,7 @@ MonoBehaviour:
   playerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   botColor: {r: 1, g: 1, b: 1, a: 1}
   countdownText: {fileID: 2095166059}
-  countdownDuration: 20
+  countdownDuration: 13
   bots:
   - {fileID: 1185270243}
 --- !u!1 &1168236169
@@ -3564,7 +3564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bot
   shootInterval: 2
-  hitChance: 50
+  hitChance: 60
   targetSpawner: {fileID: 1563598564}
 --- !u!1 &1228484034
 GameObject:
