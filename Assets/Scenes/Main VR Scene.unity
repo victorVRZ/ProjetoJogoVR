@@ -6189,6 +6189,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arco
       objectReference: {fileID: 0}
+    - target: {fileID: 6739323643635790062, guid: 034f96319c9d988489afef55a8b6d748, type: 3}
+      propertyPath: maxLaunchForce
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 7118649863079847342, guid: 034f96319c9d988489afef55a8b6d748, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.020999998
