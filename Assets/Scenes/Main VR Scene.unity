@@ -1343,7 +1343,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c7110ececd1bc044b35c9498e85d621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LeaderboardManager
-  playerName: Victor
+  playerName: Player
 --- !u!1 &433942022
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,7 +1748,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9f594060abe9684a88b1450891352fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameTimer
-  totalTime: 100
+  totalTime: 80
   timerText: {fileID: 2146021909}
   leaderboardUI: {fileID: 1140611919}
 --- !u!1 &758362237
