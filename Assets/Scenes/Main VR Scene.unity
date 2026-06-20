@@ -6221,6 +6221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arco
       objectReference: {fileID: 0}
+    - target: {fileID: 1052323898635053564, guid: 034f96319c9d988489afef55a8b6d748, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 543558ad4f9399a4ea8a2c7ca9c36be5, type: 2}
     - target: {fileID: 6739323643635790062, guid: 034f96319c9d988489afef55a8b6d748, type: 3}
       propertyPath: maxLaunchForce
       value: 30
