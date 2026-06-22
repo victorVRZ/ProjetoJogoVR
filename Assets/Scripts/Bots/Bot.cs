@@ -3,33 +3,23 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     [Header("Configurações de Tiro")]
-    // Intervalo em segundos entre cada tentativa de tiro
     public float shootInterval = 2f;
 
-    // Chance de acertar o alvo (0 a 100)
     [Range(0, 100)]
     public float hitChance = 75f;
 
     [Header("Referências")]
-    // Spawner do alvo exclusivo deste bot
     public BotTargetSpawner targetSpawner;
 
     // -------------------------------------------------------------------------
     // VARIÁVEIS PRIVADAS
     // -------------------------------------------------------------------------
 
-    // Contador interno para controlar o intervalo de tiro
     private float shootTimer;
-
-    // Acumula a pontuação total do bot durante a partida
     private int totalBotScore = 0;
 
-    // Controla se o bot está parado
+    // Controla se o bot está parado (usado tanto pela leaderboard quanto pela contagem inicial)
     private bool isStopped = false;
-
-    // -------------------------------------------------------------------------
-    // UNITY CALLBACKS
-    // -------------------------------------------------------------------------
 
     void Start()
     {
@@ -40,12 +30,10 @@ public class Bot : MonoBehaviour
         if (targetSpawner == null)
             Debug.LogError("[Bot] ERRO: targetSpawner não atribuído no Inspector!");
 
-        // Registra este bot no LeaderboardManager automaticamente
         if (LeaderboardManager.Instance != null)
             LeaderboardManager.Instance.RegisterBot(this);
         else
-            Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado! " +
-                             "O bot não será registrado na leaderboard.");
+            Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado!");
 
         shootTimer = shootInterval;
     }
@@ -67,11 +55,19 @@ public class Bot : MonoBehaviour
     // MÉTODOS PÚBLICOS
     // -------------------------------------------------------------------------
 
-    // Chamado pelo LeaderboardUI para parar o bot
+    // Chamado pelo LeaderboardUI ou pelo GameTimer (durante a contagem inicial)
     public void StopBot()
     {
         isStopped = true;
         Debug.Log("[Bot] Bot parado: " + gameObject.name);
+    }
+
+    // Chamado pelo GameTimer quando a contagem inicial termina
+    public void ResumeBot()
+    {
+        isStopped = false;
+        shootTimer = shootInterval; // reseta o timer para não atirar instantaneamente
+        Debug.Log("[Bot] Bot retomado: " + gameObject.name);
     }
 
     // -------------------------------------------------------------------------
@@ -105,12 +101,10 @@ public class Bot : MonoBehaviour
                 return;
             }
 
-            // Soma os pontos retornados pelo GetHit()
             totalBotScore += botTarget.GetHit();
 
             Debug.Log("[Bot] Score acumulado: " + totalBotScore);
 
-            // Atualiza passando a própria referência — sem depender de nome
             if (LeaderboardManager.Instance != null)
                 LeaderboardManager.Instance.SetBotScore(this, totalBotScore);
             else

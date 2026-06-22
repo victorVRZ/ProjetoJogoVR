@@ -1,49 +1,77 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System.Collections;
 
 public class GameTimer : MonoBehaviour
 {
     [Header("Configurações do Timer")]
     public float totalTime = 60f;
 
+    [Header("Contagem Inicial")]
+    // Quantos segundos de contagem regressiva antes do jogo começar (3, 2, 1...)
+    public int countdownSeconds = 3;
+
+    // Texto usado para mostrar a contagem (pode ser o mesmo timerText ou um separado)
+    public TextMeshProUGUI countdownText;
+
+    // Texto mostrado no último segundo antes de liberar o jogo (ex: "Vai!")
+    public string startMessage = "Vai!";
+
+    // Tempo que a mensagem de início fica na tela antes de desaparecer
+    public float startMessageDuration = 0.5f;
+
     [Header("UI")]
     public TextMeshProUGUI timerText;
 
+    [Header("Spawners")]
+    // Arraste aqui todos os TargetSpawner da cena (do player) — eles só começam
+    // a spawnar depois que a contagem regressiva terminar
+    public TargetSpawner[] targetSpawners;
+
+    [Header("Bots")]
+    // Arraste aqui todos os BotTargetSpawner da cena
+    public BotTargetSpawner[] botTargetSpawners;
+
+    // Arraste aqui todos os Bot da cena — eles não atiram durante a contagem
+    public Bot[] bots;
+
     [Header("Leaderboard")]
-    // Arraste o LeaderboardUI aqui
     public LeaderboardUI leaderboardUI;
 
     [Header("Música")]
-    // AudioSource que vai tocar a música — arraste ou deixa auto-detectar
     public AudioSource musicSource;
-
-    // Clipe de música a ser tocado enquanto o timer corre
     public AudioClip musicClip;
-
-    // Volume da música (0 a 1)
     [Range(0f, 1f)]
     public float musicVolume = 0.7f;
 
     private float currentTime;
-    private bool isRunning = true;
+    private bool isRunning = false; // só começa a contar depois da contagem inicial
 
     void Start()
     {
-        Debug.Log("[GameTimer] Timer iniciado com " + totalTime + " segundos.");
+        Debug.Log("[GameTimer] Iniciado. Aguardando contagem regressiva antes de começar.");
 
         if (timerText == null)
             Debug.LogError("[GameTimer] ERRO: timerText não atribuído!");
 
         if (leaderboardUI == null)
-            Debug.LogError("[GameTimer] ERRO: leaderboardUI não atribuído! " +
-                           "Arraste o LeaderboardUI no campo correspondente.");
+            Debug.LogError("[GameTimer] ERRO: leaderboardUI não atribuído!");
+
+        if (countdownText == null)
+            Debug.LogWarning("[GameTimer] AVISO: countdownText não atribuído. " +
+                             "A contagem 3,2,1 não será exibida visualmente.");
 
         currentTime = totalTime;
         UpdateTimerUI();
 
         SetupMusic();
-        PlayMusic();
+
+        // Garante que nada spawna ou atira durante a contagem.
+        SetSpawnersEnabled(false);
+        SetBotsEnabled(false);
+
+        StartCoroutine(CountdownRoutine());
     }
 
     void Update()
@@ -67,6 +95,111 @@ public class GameTimer : MonoBehaviour
         UpdateTimerUI();
     }
 
+    // -------------------------------------------------------------------------
+    // CONTAGEM REGRESSIVA INICIAL
+    // -------------------------------------------------------------------------
+
+    private IEnumerator CountdownRoutine()
+    {
+        // Esconde o timer normal durante a contagem
+        if (timerText != null)
+            timerText.gameObject.SetActive(false);
+
+        if (countdownText != null)
+            countdownText.gameObject.SetActive(true);
+
+        for (int i = countdownSeconds; i > 0; i--)
+        {
+            if (countdownText != null)
+                countdownText.text = i.ToString();
+
+            Debug.Log("[GameTimer] Contagem: " + i);
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        if (countdownText != null)
+            countdownText.text = startMessage;
+
+        yield return new WaitForSeconds(startMessageDuration);
+
+        if (countdownText != null)
+            countdownText.gameObject.SetActive(false);
+
+        // Mostra o timer normal de volta, já com o jogo liberado
+        if (timerText != null)
+            timerText.gameObject.SetActive(true);
+
+        SetSpawnersEnabled(true);
+        SetBotsEnabled(true);
+
+        PlayMusic();
+        isRunning = true;
+    }
+
+    // -------------------------------------------------------------------------
+    // CONTROLE DOS SPAWNERS
+    // -------------------------------------------------------------------------
+
+    private void SetSpawnersEnabled(bool enabled)
+    {
+        if (targetSpawners == null || targetSpawners.Length == 0)
+        {
+            Debug.LogWarning("[GameTimer] AVISO: Nenhum TargetSpawner atribuído. " +
+                             "Os spawners do player vão continuar funcionando normalmente.");
+        }
+        else
+        {
+            foreach (TargetSpawner spawner in targetSpawners)
+            {
+                if (spawner != null)
+                    spawner.SetSpawningEnabled(enabled);
+            }
+        }
+
+        if (botTargetSpawners == null || botTargetSpawners.Length == 0)
+        {
+            Debug.LogWarning("[GameTimer] AVISO: Nenhum BotTargetSpawner atribuído. " +
+                             "Os spawners dos bots vão continuar funcionando normalmente.");
+        }
+        else
+        {
+            foreach (BotTargetSpawner spawner in botTargetSpawners)
+            {
+                if (spawner != null)
+                    spawner.SetSpawningEnabled(enabled);
+            }
+        }
+
+        Debug.Log("[GameTimer] Spawners " + (enabled ? "LIBERADOS" : "BLOQUEADOS") + ".");
+    }
+
+    private void SetBotsEnabled(bool enabled)
+    {
+        if (bots == null || bots.Length == 0)
+        {
+            Debug.LogWarning("[GameTimer] AVISO: Nenhum Bot atribuído no array 'Bots'. " +
+                             "Os bots vão continuar atirando normalmente, sem esperar a contagem.");
+            return;
+        }
+
+        foreach (Bot bot in bots)
+        {
+            if (bot == null) continue;
+
+            if (enabled)
+                bot.ResumeBot();
+            else
+                bot.StopBot();
+        }
+
+        Debug.Log("[GameTimer] Bots " + (enabled ? "LIBERADOS" : "BLOQUEADOS") + ".");
+    }
+
+    // -------------------------------------------------------------------------
+    // TIMER
+    // -------------------------------------------------------------------------
+
     void UpdateTimerUI()
     {
         if (timerText == null) return;
@@ -80,7 +213,7 @@ public class GameTimer : MonoBehaviour
 
     void TimeUp()
     {
-        isRunning = false; // para o timer sem congelar a cena
+        isRunning = false;
 
         if (leaderboardUI != null)
             leaderboardUI.ShowLeaderboard();
@@ -93,7 +226,6 @@ public class GameTimer : MonoBehaviour
         isRunning = running;
         Debug.Log("[GameTimer] Timer " + (running ? "retomado." : "pausado."));
 
-        // Pausa ou retoma a música junto com o timer
         if (musicSource != null)
         {
             if (running) musicSource.UnPause();
@@ -109,7 +241,6 @@ public class GameTimer : MonoBehaviour
 
     void SetupMusic()
     {
-        // Se não foi atribuído no Inspector, tenta achar ou criar um AudioSource
         if (musicSource == null)
         {
             musicSource = GetComponent<AudioSource>();
@@ -123,24 +254,23 @@ public class GameTimer : MonoBehaviour
 
         if (musicClip == null)
         {
-            Debug.LogWarning("[GameTimer] AVISO: musicClip não atribuído! " +
-                             "Arraste um arquivo de áudio no campo 'Music Clip'.");
+            Debug.LogWarning("[GameTimer] AVISO: musicClip não atribuído!");
             return;
         }
 
         musicSource.clip = musicClip;
-        musicSource.loop = true; // garante que a música repete enquanto o timer corre
+        musicSource.loop = true;
         musicSource.volume = musicVolume;
         musicSource.playOnAwake = false;
 
-        Debug.Log("[GameTimer] Música configurada: " + musicClip.name + " | Loop: true");
+        Debug.Log("[GameTimer] Música configurada: " + musicClip.name);
     }
 
     void PlayMusic()
     {
         if (musicSource == null || musicClip == null)
         {
-            Debug.LogWarning("[GameTimer] Música não pôde ser iniciada — source ou clip ausente.");
+            Debug.LogWarning("[GameTimer] Música não pôde ser iniciada.");
             return;
         }
 
@@ -153,6 +283,6 @@ public class GameTimer : MonoBehaviour
         if (musicSource == null) return;
 
         musicSource.Stop();
-        Debug.Log("[GameTimer] Música parada — tempo esgotado.");
+        Debug.Log("[GameTimer] Música parada.");
     }
 }

@@ -2,19 +2,11 @@ using UnityEngine;
 
 public class BotTargetSpawner : MonoBehaviour
 {
-    // -------------------------------------------------------------------------
-    // VARIÁVEIS PÚBLICAS
-    // -------------------------------------------------------------------------
-
     [Header("Configurações do Spawn")]
-    // Prefab do alvo exclusivo dos bots
     public GameObject botTargetPrefab;
-
-    // Tempo de espera antes de spawnar novo alvo após ser destruído
     public float respawnDelay = 1f;
 
     [Header("Área de Spawn")]
-    // Range de posição aleatória em cada eixo
     public float spawnRangeX = 0f;
     public float spawnRangeY = 0f;
     public float spawnRangeZ = 0f;
@@ -23,12 +15,11 @@ public class BotTargetSpawner : MonoBehaviour
     // VARIÁVEIS PRIVADAS
     // -------------------------------------------------------------------------
 
-    // Referência ao alvo atualmente ativo
     private GameObject currentTarget;
 
-    // -------------------------------------------------------------------------
-    // UNITY CALLBACKS
-    // -------------------------------------------------------------------------
+    // Controla se o spawner tem permissão para criar targets dos bots.
+    // Começa true por padrão para não quebrar cenas sem GameTimer/contagem.
+    private bool spawningEnabled = true;
 
     void Start()
     {
@@ -40,33 +31,58 @@ public class BotTargetSpawner : MonoBehaviour
             return;
         }
 
-        SpawnTarget();
+        if (spawningEnabled)
+        {
+            SpawnTarget();
+        }
+        else
+        {
+            Debug.Log("[BotTargetSpawner] Spawn inicial bloqueado — aguardando liberação externa.");
+        }
     }
 
-    // -------------------------------------------------------------------------
-    // MÉTODOS PÚBLICOS
-    // -------------------------------------------------------------------------
+    // Chamado pelo GameTimer para liberar ou bloquear o spawn dos alvos dos bots
+    public void SetSpawningEnabled(bool enabled)
+    {
+        bool wasDisabled = !spawningEnabled;
+        spawningEnabled = enabled;
 
-    // Chamado pelo BotTarget ao ser destruído
+        Debug.Log("[BotTargetSpawner] Spawning " + (enabled ? "HABILITADO" : "DESABILITADO") +
+                  " em: " + gameObject.name);
+
+        if (enabled && wasDisabled && currentTarget == null)
+        {
+            SpawnTarget();
+        }
+    }
+
     public void OnTargetDestroyed()
     {
         currentTarget = null;
+
+        if (!spawningEnabled)
+        {
+            Debug.Log("[BotTargetSpawner] Alvo destruído, mas spawning desabilitado. Nenhum novo será criado.");
+            return;
+        }
+
         Debug.Log("[BotTargetSpawner] Alvo destruído. Respawnando em " + respawnDelay + "s...");
         Invoke(nameof(SpawnTarget), respawnDelay);
     }
 
-    // Retorna o alvo atualmente ativo (usado pelo Bot para mirar)
     public GameObject GetCurrentTarget()
     {
         return currentTarget;
     }
 
-    // -------------------------------------------------------------------------
-    // MÉTODOS PRIVADOS
-    // -------------------------------------------------------------------------
-
-    void SpawnTarget()
+    private void SpawnTarget()
     {
+        if (!spawningEnabled)
+        {
+            Debug.Log("[BotTargetSpawner] Tentativa de spawn bloqueada — spawning desabilitado.");
+            return;
+        }
+
         if (botTargetPrefab == null)
         {
             Debug.LogError("[BotTargetSpawner] ERRO: botTargetPrefab é null no momento do spawn!");
@@ -79,7 +95,6 @@ public class BotTargetSpawner : MonoBehaviour
             return;
         }
 
-        // Calcula posição com offset aleatório
         Vector3 spawnOffset = new Vector3(
             Random.Range(-spawnRangeX, spawnRangeX),
             Random.Range(-spawnRangeY, spawnRangeY),
@@ -92,7 +107,6 @@ public class BotTargetSpawner : MonoBehaviour
 
         Debug.Log("[BotTargetSpawner] Alvo spawnado na posição: " + spawnPosition);
 
-        // Passa referência do spawner para o alvo
         BotTarget botTargetScript = currentTarget.GetComponent<BotTarget>();
 
         if (botTargetScript == null)

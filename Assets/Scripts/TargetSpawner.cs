@@ -7,11 +7,7 @@ public class TargetSpawner : MonoBehaviour
     public float respawnDelay = 1f;
 
     [Header("Target Especial")]
-    // Prefab do target especial (vale mais pontos) — pode ser o mesmo modelo
-    // com material/cor diferente, ou um prefab totalmente novo
     public GameObject specialTargetPrefab;
-
-    // Chance de spawnar o target especial em vez do normal (0 a 100)
     [Range(0f, 100f)]
     public float specialSpawnChance = 15f;
 
@@ -20,14 +16,54 @@ public class TargetSpawner : MonoBehaviour
     public float spawnRangeY = 0f;
     public float spawnRangeZ = 0f;
 
+    // -------------------------------------------------------------------------
+    // VARIÁVEIS PRIVADAS
+    // -------------------------------------------------------------------------
+
+    // Controla se o spawner tem permissão para criar targets.
+    // Começa como true por padrão para não quebrar cenas que não usam GameTimer/contagem.
+    private bool spawningEnabled = true;
+
     void Start()
     {
-        SpawnTarget();
+        // Só spawna de imediato se já estiver habilitado.
+        // Se o GameTimer chamar SetSpawningEnabled(false) antes deste Start
+        // (ordem de execução pode variar), o spawn inicial é pulado e fica
+        // aguardando a chamada de SetSpawningEnabled(true) mais adiante.
+        if (spawningEnabled)
+        {
+            SpawnTarget();
+        }
+        else
+        {
+            Debug.Log("[TargetSpawner] Spawn inicial bloqueado — aguardando liberação externa.");
+        }
+    }
+
+    // Chamado pelo GameTimer para liberar ou bloquear o spawn (ex: durante a contagem 3,2,1)
+    public void SetSpawningEnabled(bool enabled)
+    {
+        bool wasDisabled = !spawningEnabled;
+        spawningEnabled = enabled;
+
+        Debug.Log("[TargetSpawner] Spawning " + (enabled ? "HABILITADO" : "DESABILITADO") +
+                  " em: " + gameObject.name);
+
+        // Se acabou de ser liberado e ainda não tem nenhum target ativo, spawna agora
+        if (enabled && wasDisabled)
+        {
+            SpawnTarget();
+        }
     }
 
     void SpawnTarget()
     {
-        // Posição aleatória dentro do range definido
+        if (!spawningEnabled)
+        {
+            Debug.Log("[TargetSpawner] Tentativa de spawn bloqueada — spawning desabilitado.");
+            return;
+        }
+
         Vector3 spawnOffset = new Vector3(
             Random.Range(-spawnRangeX, spawnRangeX),
             Random.Range(-spawnRangeY, spawnRangeY),
@@ -36,27 +72,22 @@ public class TargetSpawner : MonoBehaviour
 
         Vector3 spawnPosition = transform.position + spawnOffset;
 
-        // Sorteia se este spawn será o target especial
         float roll = Random.Range(0f, 100f);
         bool spawnSpecial = (roll <= specialSpawnChance) && (specialTargetPrefab != null);
 
         GameObject prefabToSpawn = spawnSpecial ? specialTargetPrefab : targetPrefab;
 
         Debug.Log("[TargetSpawner] Rolagem: " + roll.ToString("F1") +
-                  " | Chance especial: " + specialSpawnChance +
                   " | Resultado: " + (spawnSpecial ? "ESPECIAL" : "Normal"));
 
         if (prefabToSpawn == null)
         {
-            Debug.LogError("[TargetSpawner] ERRO: Prefab a ser spawnado é null! " +
-                           "Verifique se 'Target Prefab' está atribuído no Inspector.");
+            Debug.LogError("[TargetSpawner] ERRO: Prefab a ser spawnado é null!");
             return;
         }
 
         GameObject newTarget = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
 
-        // Passa a referência do spawner para o target — funciona tanto para
-        // o Target normal quanto para o especial, desde que ambos usem o mesmo script
         Target targetScript = newTarget.GetComponent<Target>();
         if (targetScript != null)
         {
@@ -70,6 +101,13 @@ public class TargetSpawner : MonoBehaviour
 
     public void OnTargetDestroyed()
     {
+        if (!spawningEnabled)
+        {
+            Debug.Log("[TargetSpawner] Target destruído, mas spawning está desabilitado. " +
+                      "Nenhum novo target será criado.");
+            return;
+        }
+
         Invoke(nameof(SpawnTarget), respawnDelay);
     }
 }
