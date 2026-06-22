@@ -11,6 +11,11 @@ public class FloatingScoreText : MonoBehaviour
     // Tempo total até o texto desaparecer e ser destruído
     public float lifetime = 1f;
 
+    [Header("Câmera (opcional)")]
+    [Tooltip("Deixe vazio para usar Camera.main automaticamente. " +
+             "Só preencha se a câmera do XR Origin não tiver a tag 'MainCamera'.")]
+    public Camera targetCamera;
+
     [Header("Referência")]
     // TextMeshPro que mostra o valor — auto-detectado se não atribuído
     public TextMeshPro textMesh;
@@ -29,6 +34,21 @@ public class FloatingScoreText : MonoBehaviour
         if (textMesh == null)
             Debug.LogError("[FloatingScoreText] ERRO: Nenhum TextMeshPro encontrado! " +
                            "O prefab precisa ter um componente TextMeshPro (3D), não TextMeshProUGUI.");
+
+        // Se não foi atribuída manualmente no Inspector, tenta achar automaticamente
+        if (targetCamera == null)
+        {
+            targetCamera = Camera.main;
+
+            // Fallback extra — comum em VR a Main Camera não ter a tag "MainCamera"
+            if (targetCamera == null)
+                targetCamera = FindFirstObjectByType<Camera>();
+
+            if (targetCamera == null)
+                Debug.LogWarning("[FloatingScoreText] AVISO: Nenhuma câmera encontrada automaticamente. " +
+                                 "O texto não vai rotacionar para encarar o player. " +
+                                 "Arraste a câmera do XR Origin manualmente no campo 'Target Camera'.");
+        }
     }
 
     // Chamado pelo Target logo após instanciar este prefab
@@ -51,8 +71,8 @@ public class FloatingScoreText : MonoBehaviour
         cachedTransform.position += Vector3.up * floatSpeed * Time.deltaTime;
 
         // Faz o texto sempre olhar para a câmera (efeito billboard)
-        if (Camera.main != null)
-            cachedTransform.rotation = Quaternion.LookRotation(cachedTransform.position - Camera.main.transform.position);
+        if (targetCamera != null)
+            cachedTransform.rotation = Quaternion.LookRotation(cachedTransform.position - targetCamera.transform.position);
 
         // Fade out gradual na segunda metade da vida do texto
         if (textMesh != null && elapsed > lifetime * 0.5f)

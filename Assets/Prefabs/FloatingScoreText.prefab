@@ -190,7 +190,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3450037995808732579}
-  - component: {fileID: 7510753610105796651}
+  - component: {fileID: 7284470868517859805}
   m_Layer: 0
   m_Name: FloatingScoreText
   m_TagString: Untagged
@@ -214,7 +214,7 @@ Transform:
   - {fileID: 5582635497408589580}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7510753610105796651
+--- !u!114 &7284470868517859805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -223,10 +223,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8531480286922695618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be12aefdfca03a444a337df573b130ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e6472ff80648694286e258b99d4e4c9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldSpaceUI
-  playerCamera: {fileID: 0}
-  offset: {x: 0.4, y: -0.2, z: 0.6}
-  followSpeed: 5
-  facePlayer: 1
+  m_EditorClassIdentifier: Assembly-CSharp::FloatingScoreText
+  floatSpeed: 1
+  lifetime: 1
+  targetCamera: {fileID: 0}
+  textMesh: {fileID: 2190059985366177083}
