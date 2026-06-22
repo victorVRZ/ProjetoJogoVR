@@ -2206,7 +2206,7 @@ MonoBehaviour:
   countdownSeconds: 3
   countdownText: {fileID: 1661347562}
   startMessage: Vai!
-  startMessageDuration: 0.5
+  startMessageDuration: 1
   timerText: {fileID: 2146021909}
   targetSpawners:
   - {fileID: 1096489389}
@@ -3379,7 +3379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bot
   shootInterval: 2
-  hitChance: 55
+  hitChance: 45
   targetSpawner: {fileID: 273069301}
 --- !u!1 &1125920778
 GameObject:
@@ -3963,7 +3963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bot
   shootInterval: 2
-  hitChance: 55
+  hitChance: 45
   targetSpawner: {fileID: 1563598564}
 --- !u!1001 &1197501329
 PrefabInstance:
@@ -5130,7 +5130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bot
   shootInterval: 2
-  hitChance: 55
+  hitChance: 45
   targetSpawner: {fileID: 528890776}
 --- !u!1 &1605868062
 GameObject:
@@ -7290,7 +7290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 941671559886687627, guid: 9a195828443f3cd44ab0aede60c6260b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17
+      value: -27
       objectReference: {fileID: 0}
     - target: {fileID: 941671559886687627, guid: 9a195828443f3cd44ab0aede60c6260b, type: 3}
       propertyPath: m_LocalPosition.z

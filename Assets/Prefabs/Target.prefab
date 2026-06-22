@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c0b99690e7ab64fa3ff94b67fb5aa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Target
-  moveSpeed: 2.2
+  moveSpeed: 2
   moveRange: 1
   directionChangeInterval: 1.5
   pointValue: 100
