@@ -47,14 +47,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96c0b99690e7ab64fa3ff94b67fb5aa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Target
-  moveSpeed: 2
-  moveRange: 3
+  moveSpeed: 2.1
+  moveRange: 1
+  directionChangeInterval: 1.5
   pointValue: 100
   hitVFXPrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
   vfxDestroyDelay: 2
   hitSoundClip: {fileID: 8300000, guid: d0fce718e1c1ab84fbcf8c481aa20601, type: 3}
   hitSoundVolume: 1
-  randomizePitch: 0
+  randomizePitch: 1
 --- !u!135 &7177304908641323316
 SphereCollider:
   m_ObjectHideFlags: 0

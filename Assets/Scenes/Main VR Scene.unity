@@ -1743,7 +1743,7 @@ GameObject:
   - component: {fileID: 434159727}
   - component: {fileID: 434159726}
   m_Layer: 0
-  m_Name: TargetSpawner 3
+  m_Name: TargetSpawner 4
   m_TagString: Untagged
   m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -3356,7 +3356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bot
   shootInterval: 2
-  hitChance: 60
+  hitChance: 55
   targetSpawner: {fileID: 273069301}
 --- !u!1 &1125920778
 GameObject:
@@ -4078,7 +4078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bot
   shootInterval: 2
-  hitChance: 60
+  hitChance: 55
   targetSpawner: {fileID: 1563598564}
 --- !u!1001 &1197501329
 PrefabInstance:
@@ -4452,6 +4452,7 @@ Transform:
   m_Children:
   - {fileID: 1096489390}
   - {fileID: 1040577317}
+  - {fileID: 1957675100}
   - {fileID: 434159727}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5244,7 +5245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bot
   shootInterval: 2
-  hitChance: 60
+  hitChance: 55
   targetSpawner: {fileID: 528890776}
 --- !u!1 &1605868062
 GameObject:
@@ -6264,6 +6265,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 55.046, y: -90, z: -90}
+--- !u!1 &1957675099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1957675100}
+  - component: {fileID: 1957675101}
+  m_Layer: 0
+  m_Name: TargetSpawner 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1957675100
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957675099}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1400001, z: 2.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1349650576}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1957675101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957675099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5876c4beace37e4abca2f56ea0e8009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TargetSpawner
+  targetPrefab: {fileID: 3826754598358025210, guid: 7d2c337d1e187be488bc00510c62618f, type: 3}
+  respawnDelay: 1
+  spawnRangeX: 1
+  spawnRangeY: 1.2
+  spawnRangeZ: 0.3
 --- !u!1 &1978389577
 GameObject:
   m_ObjectHideFlags: 0
