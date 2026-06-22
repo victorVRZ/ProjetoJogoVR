@@ -108,6 +108,9 @@ public class GameTimer : MonoBehaviour
         if (countdownText != null)
             countdownText.gameObject.SetActive(true);
 
+        // Música começa já na contagem
+        PlayMusic();
+
         for (int i = countdownSeconds; i > 0; i--)
         {
             if (countdownText != null)
@@ -126,14 +129,13 @@ public class GameTimer : MonoBehaviour
         if (countdownText != null)
             countdownText.gameObject.SetActive(false);
 
-        // Mostra o timer normal de volta, já com o jogo liberado
         if (timerText != null)
             timerText.gameObject.SetActive(true);
 
         SetSpawnersEnabled(true);
         SetBotsEnabled(true);
 
-        PlayMusic();
+        // Remove o PlayMusic() daqui, já que agora toca no início
         isRunning = true;
     }
 
