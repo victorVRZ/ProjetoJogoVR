@@ -56,6 +56,8 @@ MonoBehaviour:
   hitSoundClip: {fileID: 8300000, guid: d0fce718e1c1ab84fbcf8c481aa20601, type: 3}
   hitSoundVolume: 1
   randomizePitch: 1
+  floatingScoreTextPrefab: {fileID: 8531480286922695618, guid: 80b7ac2beb125cf44b877227d6416da2, type: 3}
+  scoreTextHeightOffset: 0.2
 --- !u!135 &7177304908641323316
 SphereCollider:
   m_ObjectHideFlags: 0

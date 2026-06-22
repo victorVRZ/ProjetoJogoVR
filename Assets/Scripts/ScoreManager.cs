@@ -7,7 +7,6 @@ public class ScoreManager : MonoBehaviour
 
     [Header("UI")]
     public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI pointsFeedbackText; // texto "+100" que aparece brevemente
 
     private int score = 0;
 
@@ -31,30 +30,14 @@ public class ScoreManager : MonoBehaviour
     {
         score += points;
         UpdateScoreUI();
-        ShowFeedback(points);
+
+        Debug.Log("[ScoreManager] +" + points + " pontos. Score total: " + score);
     }
 
     void UpdateScoreUI()
     {
         if (scoreText != null)
             scoreText.text = "Score: " + score.ToString();
-    }
-
-    void ShowFeedback(int points)
-    {
-        if (pointsFeedbackText == null) return;
-
-        pointsFeedbackText.text = "+" + points.ToString();
-        pointsFeedbackText.gameObject.SetActive(true);
-
-        CancelInvoke(nameof(HideFeedback));
-        Invoke(nameof(HideFeedback), 1f);
-    }
-
-    void HideFeedback()
-    {
-        if (pointsFeedbackText != null)
-            pointsFeedbackText.gameObject.SetActive(false);
     }
 
     public int GetScore() => score;

@@ -3,13 +3,8 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
     [Header("Movement Settings")]
-    // Velocidade de movimento entre os pontos
     public float moveSpeed = 2f;
-
-    // Distância máxima que o alvo pode se afastar do centro em qualquer direção
     public float moveRange = 3f;
-
-    // Intervalo de tempo entre escolher uma nova direção aleatória
     public float directionChangeInterval = 1.5f;
 
     [Header("Score")]
@@ -25,19 +20,20 @@ public class Target : MonoBehaviour
     public float hitSoundVolume = 1.5f;
     public bool randomizePitch = true;
 
+    [Header("Feedback de Pontuação (no Target)")]
+    // Prefab com o componente FloatingScoreText (TextMeshPro 3D)
+    public GameObject floatingScoreTextPrefab;
+
+    // Altura do offset onde o texto aparece em relação ao ponto de impacto
+    public float scoreTextHeightOffset = 0.2f;
+
     // -------------------------------------------------------------------------
     // VARIÁVEIS PRIVADAS — MOVIMENTO
     // -------------------------------------------------------------------------
 
-    // Posição central — todas as direções são calculadas em torno dela
     private Vector3 centerPosition;
-
-    // Próxima direção sorteada (Up, Down, Left, Right)
     private Vector3 currentDirection;
-
-    // Contador para saber quando sortear uma nova direção
     private float directionTimer;
-
     private TargetSpawner spawner;
 
     // -------------------------------------------------------------------------
@@ -47,8 +43,6 @@ public class Target : MonoBehaviour
     void Start()
     {
         centerPosition = transform.position;
-
-        // Sorteia a primeira direção já no início
         PickRandomDirection();
 
         Debug.Log("[Target] Iniciado em: " + centerPosition + " | Direção inicial: " + currentDirection);
@@ -61,7 +55,6 @@ public class Target : MonoBehaviour
 
     void Update()
     {
-        // Conta o tempo para trocar de direção periodicamente
         directionTimer -= Time.deltaTime;
         if (directionTimer <= 0f)
         {
@@ -75,7 +68,6 @@ public class Target : MonoBehaviour
     // MOVIMENTO IMPREVISÍVEL
     // -------------------------------------------------------------------------
 
-    // Sorteia uma das 4 direções (cima, baixo, esquerda, direita)
     private void PickRandomDirection()
     {
         int choice = Random.Range(0, 4);
@@ -88,7 +80,6 @@ public class Target : MonoBehaviour
             case 3: currentDirection = Vector3.down; break;
         }
 
-        // Reseta o timer com uma pequena variação para parecer mais natural
         directionTimer = directionChangeInterval + Random.Range(-0.3f, 0.3f);
 
         Debug.Log("[Target] Nova direção sorteada: " + currentDirection +
@@ -97,31 +88,21 @@ public class Target : MonoBehaviour
 
     private void MoveTarget()
     {
-        // Calcula a posição que o movimento levaria
         Vector3 nextPosition = transform.position + currentDirection * moveSpeed * Time.deltaTime;
-
-        // Calcula o offset dessa posição em relação ao centro
         Vector3 offsetFromCenter = nextPosition - centerPosition;
 
-        // Se ultrapassar o range em X ou Y, inverte a direção correspondente
-        // em vez de deixar o alvo fugir para fora da área permitida
         if (Mathf.Abs(offsetFromCenter.x) > moveRange)
         {
             currentDirection.x *= -1f;
-            Debug.Log("[Target] Limite X atingido. Invertendo direção horizontal.");
         }
 
         if (Mathf.Abs(offsetFromCenter.y) > moveRange)
         {
             currentDirection.y *= -1f;
-            Debug.Log("[Target] Limite Y atingido. Invertendo direção vertical.");
         }
 
-        // Aplica o movimento já corrigido
         transform.Translate(currentDirection * moveSpeed * Time.deltaTime, Space.World);
 
-        // Clampa a posição final para garantir que nunca ultrapasse o range,
-        // mesmo em casos de delta time grande ou bordas múltiplas
         Vector3 clampedOffset = transform.position - centerPosition;
         clampedOffset.x = Mathf.Clamp(clampedOffset.x, -moveRange, moveRange);
         clampedOffset.y = Mathf.Clamp(clampedOffset.y, -moveRange, moveRange);
@@ -140,6 +121,7 @@ public class Target : MonoBehaviour
 
             SpawnHitVFX(hitPoint);
             PlayHitSound(hitPoint);
+            SpawnFloatingScoreText(hitPoint);
 
             if (ScoreManager.Instance != null)
                 ScoreManager.Instance.AddScore(pointValue);
@@ -162,7 +144,6 @@ public class Target : MonoBehaviour
         }
 
         GameObject vfx = Instantiate(hitVFXPrefab, hitPoint, Quaternion.identity);
-        Debug.Log("[Target] VFX spawnado em: " + hitPoint);
         Destroy(vfx, vfxDestroyDelay);
     }
 
@@ -188,10 +169,36 @@ public class Target : MonoBehaviour
 
         source.Play();
 
-        Debug.Log("[Target] Som de impacto tocado em: " + hitPoint +
-                  " | Volume: " + hitSoundVolume);
-
         float clipDuration = hitSoundClip.length / source.pitch;
         Destroy(soundObj, clipDuration);
+    }
+
+    // -------------------------------------------------------------------------
+    // TEXTO FLUTUANTE DE PONTUAÇÃO
+    // -------------------------------------------------------------------------
+
+    private void SpawnFloatingScoreText(Vector3 hitPoint)
+    {
+        if (floatingScoreTextPrefab == null)
+        {
+            Debug.LogWarning("[Target] floatingScoreTextPrefab não atribuído! " +
+                             "Arraste o prefab com o script FloatingScoreText no Inspector.");
+            return;
+        }
+
+        Vector3 spawnPos = hitPoint + Vector3.up * scoreTextHeightOffset;
+        GameObject textObj = Instantiate(floatingScoreTextPrefab, spawnPos, Quaternion.identity);
+
+        FloatingScoreText floatingScript = textObj.GetComponent<FloatingScoreText>();
+        if (floatingScript != null)
+        {
+            floatingScript.Setup(pointValue);
+        }
+        else
+        {
+            Debug.LogError("[Target] ERRO: O prefab não possui o script FloatingScoreText!");
+        }
+
+        Debug.Log("[Target] Texto de pontuação spawnado em: " + spawnPos);
     }
 }
