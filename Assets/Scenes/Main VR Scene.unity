@@ -2203,6 +2203,9 @@ MonoBehaviour:
   totalTime: 80
   timerText: {fileID: 2146021909}
   leaderboardUI: {fileID: 1140611919}
+  musicSource: {fileID: 0}
+  musicClip: {fileID: 8300000, guid: 791eca0d329556d4b80055cc198af1d3, type: 3}
+  musicVolume: 0.7
 --- !u!1001 &610402205
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2366,6 +2369,54 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 25.480434, y: 20.323166, z: 1.5871732}
   m_Center: {x: 0, y: -0.0000000010782132, z: -0.018089414}
+--- !u!1 &641677183
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 641677185}
+  - component: {fileID: 641677184}
+  m_Layer: 0
+  m_Name: AmbientSoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &641677184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641677183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09c71fd31d85e7c40aab77ee7e96bd67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AmbientSoundManager
+  ambientSource: {fileID: 0}
+  ambientClip: {fileID: 8300000, guid: 33b3fbe17aae74544b3cc48235174f01, type: 3}
+  ambientVolume: 0.3
+  is2DSound: 1
+--- !u!4 &641677185
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 641677183}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.19978, y: 0.05288, z: 2.23731}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &655206236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2986,7 +3037,7 @@ Transform:
   m_GameObject: {fileID: 1000479872}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.111, z: 0.032}
+  m_LocalPosition: {x: 0, y: -0.267, z: -0.065}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3012,7 +3063,7 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 1.57
+  m_Height: 0.94
   m_Radius: 0.1
   m_SlopeLimit: 45
   m_StepOffset: 0.3
@@ -7434,3 +7485,4 @@ SceneRoots:
   - {fileID: 6362476205859331819}
   - {fileID: 1852662200}
   - {fileID: 519331499}
+  - {fileID: 641677185}

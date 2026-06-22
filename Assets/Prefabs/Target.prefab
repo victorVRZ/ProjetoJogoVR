@@ -50,6 +50,8 @@ MonoBehaviour:
   moveSpeed: 2
   moveRange: 3
   pointValue: 100
+  hitVFXPrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
+  vfxDestroyDelay: 2
 --- !u!135 &7177304908641323316
 SphereCollider:
   m_ObjectHideFlags: 0
