@@ -2205,7 +2205,7 @@ MonoBehaviour:
   leaderboardUI: {fileID: 1140611919}
   musicSource: {fileID: 0}
   musicClip: {fileID: 8300000, guid: 791eca0d329556d4b80055cc198af1d3, type: 3}
-  musicVolume: 0.5
+  musicVolume: 0.3
 --- !u!1001 &610402205
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2988,7 +2988,6 @@ GameObject:
   - component: {fileID: 1000479874}
   - component: {fileID: 1000479873}
   - component: {fileID: 1000479876}
-  - component: {fileID: 1000479878}
   - component: {fileID: 1000479879}
   m_Layer: 0
   m_Name: VR Player
@@ -3070,54 +3069,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1000479878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000479872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 626a4d6723d6ad24b9aebb811ad5a3dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement.ContinuousMoveProvider
-  m_Mediator: {fileID: 473364684}
-  m_TransformationPriority: 0
-  m_MoveSpeed: 1
-  m_InAirControlModifier: 0.5
-  m_EnableStrafe: 1
-  m_EnableFly: 0
-  m_ForwardSource: {fileID: 2036614356}
-  m_LeftHandMoveInput:
-    m_InputSourceMode: 2
-    m_InputAction:
-      m_Name: Left Hand Move
-      m_Type: 0
-      m_ExpectedControlType: Vector2
-      m_Id: ace3f5f0-31f8-47de-8ea6-1709557f97eb
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_InputActionReference: {fileID: 0}
-    m_ObjectReferenceObject: {fileID: 0}
-    m_ManualValue: {x: 0, y: 0}
-  m_RightHandMoveInput:
-    m_InputSourceMode: 2
-    m_InputAction:
-      m_Name: Right Hand Move
-      m_Type: 0
-      m_ExpectedControlType: Vector2
-      m_Id: af2c38c4-8d26-47cd-8c41-00f452347f87
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_InputActionReference: {fileID: 0}
-    m_ObjectReferenceObject: {fileID: 0}
-    m_ManualValue: {x: 0, y: 0}
-  m_UseGravity: 1
 --- !u!114 &1000479879
 MonoBehaviour:
   m_ObjectHideFlags: 0

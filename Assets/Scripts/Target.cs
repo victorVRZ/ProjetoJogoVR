@@ -20,9 +20,13 @@ public class Target : MonoBehaviour
     // Clipe de som a ser tocado ao destruir o alvo
     public AudioClip hitSoundClip;
 
-    // Volume do som de impacto (0 a 1)
-    [Range(0f, 1f)]
-    public float hitSoundVolume = 1f;
+    // Volume do som de impacto. PlayClipAtPoint trava em 1.0 — usamos um
+    // AudioSource manual para poder ir além disso (ex: 1.5, 2.0 = mais alto que o normal)
+    [Range(0f, 3f)]
+    public float hitSoundVolume = 1.5f;
+
+    // Pitch do som — variações leves (0.95 a 1.05) dão mais naturalidade quando vários alvos explodem
+    public bool randomizePitch = true;
 
     private Vector3 startPosition;
     private float direction = 1f;
@@ -99,10 +103,26 @@ public class Target : MonoBehaviour
             return;
         }
 
-        // PlayClipAtPoint cria um GameObject temporário só para tocar o som,
-        // o que funciona mesmo depois do Target original ser destruído.
-        AudioSource.PlayClipAtPoint(hitSoundClip, hitPoint, hitSoundVolume);
+        // Cria um GameObject temporário com AudioSource manual.
+        // Isso permite volume acima de 1.0, o que PlayClipAtPoint não permite.
+        GameObject soundObj = new GameObject("TempHitSound");
+        soundObj.transform.position = hitPoint;
 
-        Debug.Log("[Target] Som de impacto tocado em: " + hitPoint);
+        AudioSource source = soundObj.AddComponent<AudioSource>();
+        source.clip = hitSoundClip;
+        source.volume = hitSoundVolume; // pode passar de 1.0 aqui
+        source.spatialBlend = 1f; // som 3D, igual ao PlayClipAtPoint padrão
+
+        if (randomizePitch)
+            source.pitch = Random.Range(0.95f, 1.05f);
+
+        source.Play();
+
+        Debug.Log("[Target] Som de impacto tocado em: " + hitPoint +
+                  " | Volume: " + hitSoundVolume);
+
+        // Destrói o objeto temporário após o clipe terminar (considerando o pitch)
+        float clipDuration = hitSoundClip.length / source.pitch;
+        Destroy(soundObj, clipDuration);
     }
 }
