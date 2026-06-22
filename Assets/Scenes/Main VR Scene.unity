@@ -2400,7 +2400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AmbientSoundManager
   ambientSource: {fileID: 0}
   ambientClip: {fileID: 8300000, guid: 33b3fbe17aae74544b3cc48235174f01, type: 3}
-  ambientVolume: 0.3
+  ambientVolume: 0.251
   is2DSound: 1
 --- !u!4 &641677185
 Transform:
