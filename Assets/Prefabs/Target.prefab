@@ -52,6 +52,8 @@ MonoBehaviour:
   pointValue: 100
   hitVFXPrefab: {fileID: 271054424957760564, guid: 1468eeb0963ddad41909c04ad8af0aee, type: 3}
   vfxDestroyDelay: 2
+  hitSoundClip: {fileID: 8300000, guid: bb73cb889e6fd4d43bb3aa7cf3637617, type: 3}
+  hitSoundVolume: 1
 --- !u!135 &7177304908641323316
 SphereCollider:
   m_ObjectHideFlags: 0

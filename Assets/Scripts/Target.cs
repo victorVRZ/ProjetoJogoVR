@@ -16,6 +16,14 @@ public class Target : MonoBehaviour
     // Tempo até o VFX ser destruído automaticamente
     public float vfxDestroyDelay = 2f;
 
+    [Header("Som de Impacto")]
+    // Clipe de som a ser tocado ao destruir o alvo
+    public AudioClip hitSoundClip;
+
+    // Volume do som de impacto (0 a 1)
+    [Range(0f, 1f)]
+    public float hitSoundVolume = 1f;
+
     private Vector3 startPosition;
     private float direction = 1f;
     private TargetSpawner spawner;
@@ -46,8 +54,13 @@ public class Target : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Arrow"))
         {
+            Vector3 hitPoint = collision.contacts[0].point;
+
             // Spawna o VFX no ponto de impacto antes de destruir o alvo
-            SpawnHitVFX(collision.contacts[0].point);
+            SpawnHitVFX(hitPoint);
+
+            // Toca o som de impacto no ponto de impacto
+            PlayHitSound(hitPoint);
 
             // Adiciona pontos ao acertar
             if (ScoreManager.Instance != null)
@@ -70,12 +83,26 @@ public class Target : MonoBehaviour
             return;
         }
 
-        // Instancia o VFX no ponto exato de contato entre a flecha e o alvo
         GameObject vfx = Instantiate(hitVFXPrefab, hitPoint, Quaternion.identity);
 
         Debug.Log("[Target] VFX spawnado em: " + hitPoint);
 
-        // Destrói o VFX após o delay para não acumular partículas na cena
         Destroy(vfx, vfxDestroyDelay);
+    }
+
+    private void PlayHitSound(Vector3 hitPoint)
+    {
+        if (hitSoundClip == null)
+        {
+            Debug.LogWarning("[Target] Som de impacto não atribuído! " +
+                             "Arraste um AudioClip no campo 'Hit Sound Clip'.");
+            return;
+        }
+
+        // PlayClipAtPoint cria um GameObject temporário só para tocar o som,
+        // o que funciona mesmo depois do Target original ser destruído.
+        AudioSource.PlayClipAtPoint(hitSoundClip, hitPoint, hitSoundVolume);
+
+        Debug.Log("[Target] Som de impacto tocado em: " + hitPoint);
     }
 }
