@@ -1762,7 +1762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetSpawner
   targetPrefab: {fileID: 3826754598358025210, guid: 7d2c337d1e187be488bc00510c62618f, type: 3}
-  respawnDelay: 1
+  respawnDelay: 1.2
   specialTargetPrefab: {fileID: 0}
   specialSpawnChance: 15
   spawnRangeX: 0.8
@@ -3211,7 +3211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetSpawner
   targetPrefab: {fileID: 3826754598358025210, guid: 7d2c337d1e187be488bc00510c62618f, type: 3}
-  respawnDelay: 1
+  respawnDelay: 1.8
   specialTargetPrefab: {fileID: 0}
   specialSpawnChance: 10
   spawnRangeX: 1
@@ -3311,7 +3311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetSpawner
   targetPrefab: {fileID: 3826754598358025210, guid: 7d2c337d1e187be488bc00510c62618f, type: 3}
-  respawnDelay: 1
+  respawnDelay: 1.5
   specialTargetPrefab: {fileID: 3826754598358025210, guid: e936921a8bfcfa74eb89355784030494, type: 3}
   specialSpawnChance: 8
   spawnRangeX: 0.8
@@ -6343,7 +6343,7 @@ GameObject:
   - component: {fileID: 1884209652}
   - component: {fileID: 1884209651}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: LeaderboardText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6513,7 +6513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TargetSpawner
   targetPrefab: {fileID: 3826754598358025210, guid: 7d2c337d1e187be488bc00510c62618f, type: 3}
-  respawnDelay: 1
+  respawnDelay: 1.4
   specialTargetPrefab: {fileID: 3826754598358025210, guid: e936921a8bfcfa74eb89355784030494, type: 3}
   specialSpawnChance: 8
   spawnRangeX: 1
@@ -6998,7 +6998,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 19.7, y: -49.1}
+  m_AnchoredPosition: {x: 2.2, y: -50.7}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2095166059
@@ -7021,7 +7021,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 20
+  m_text: Reiniciando
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7048,8 +7048,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34
-  m_fontSizeBase: 34
+  m_fontSize: 21.55
+  m_fontSizeBase: 21.55
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -121,7 +121,7 @@ public class LeaderboardUI : MonoBehaviour
             int seconds = Mathf.CeilToInt(remaining);
 
             if (countdownText != null)
-                countdownText.text = "Reiniciando em " + seconds + "...";
+                countdownText.text = "Reiniciando " + seconds + "...";
 
             Debug.Log("[LeaderboardUI] Countdown: " + seconds + "s restantes.");
 
