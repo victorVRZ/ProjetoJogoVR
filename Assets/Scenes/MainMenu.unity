@@ -730,6 +730,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 269043718}
+  - component: {fileID: 269043719}
   m_Layer: 0
   m_Name: DifficultyManager
   m_TagString: Untagged
@@ -752,6 +753,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &269043719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269043717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3265f2d2813caba46902979ca24afd61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DifficultyManager
+  currentDifficulty: 1
+  easySettings:
+    targetMoveSpeed: 1.2
+    targetPointValue: 100
+    botHitChance: 40
+    botShootInterval: 3
+  mediumSettings:
+    targetMoveSpeed: 2
+    targetPointValue: 150
+    botHitChance: 65
+    botShootInterval: 2
+  hardSettings:
+    targetMoveSpeed: 3.2
+    targetPointValue: 250
+    botHitChance: 85
+    botShootInterval: 1.2
 --- !u!1 &312244675
 GameObject:
   m_ObjectHideFlags: 0
