@@ -23,6 +23,8 @@ public class Bot : MonoBehaviour
 
     void Start()
     {
+        ApplyDifficultySettings();
+
         Debug.Log("[Bot] Bot iniciado: " + gameObject.name +
                   " | Intervalo: " + shootInterval + "s" +
                   " | Chance de acerto: " + hitChance + "%");
@@ -36,6 +38,21 @@ public class Bot : MonoBehaviour
             Debug.LogWarning("[Bot] AVISO: LeaderboardManager não encontrado!");
 
         shootTimer = shootInterval;
+    }
+
+    private void ApplyDifficultySettings()
+    {
+        if (DifficultyManager.Instance == null)
+        {
+            Debug.Log("[Bot] DifficultyManager não encontrado. Usando valores do Inspector (modo teste direto).");
+            return;
+        }
+
+        var settings = DifficultyManager.Instance.GetCurrentSettings();
+        hitChance = settings.botHitChance;
+        shootInterval = settings.botShootInterval;
+
+        Debug.Log("[Bot] Dificuldade aplicada — HitChance: " + hitChance + "% | ShootInterval: " + shootInterval + "s");
     }
 
     void Update()

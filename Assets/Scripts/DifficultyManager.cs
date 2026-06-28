@@ -32,6 +32,9 @@ public class DifficultyManager : MonoBehaviour
 
         [Tooltip("Intervalo entre tiros do bot — menor = bot mais rápido/agressivo")]
         public float botShootInterval;
+
+        [Tooltip("Pontos que o bot ganha ao acertar seu próprio alvo")]
+        public int botPointValue;
     }
 
     [Header("Configurações — Fácil")]
@@ -40,7 +43,8 @@ public class DifficultyManager : MonoBehaviour
         targetMoveSpeed = 1.2f,
         targetPointValue = 100,
         botHitChance = 40f,
-        botShootInterval = 3f
+        botShootInterval = 3f,
+        botPointValue = 50
     };
 
     [Header("Configurações — Médio")]
@@ -49,7 +53,8 @@ public class DifficultyManager : MonoBehaviour
         targetMoveSpeed = 2f,
         targetPointValue = 150,
         botHitChance = 65f,
-        botShootInterval = 2f
+        botShootInterval = 2f,
+        botPointValue = 100
     };
 
     [Header("Configurações — Difícil")]
@@ -58,7 +63,8 @@ public class DifficultyManager : MonoBehaviour
         targetMoveSpeed = 3.2f,
         targetPointValue = 250,
         botHitChance = 85f,
-        botShootInterval = 1.2f
+        botShootInterval = 1.2f,
+        botPointValue = 200
     };
 
     void Awake()

@@ -42,10 +42,30 @@ public class Target : MonoBehaviour
 
     void Start()
     {
+        // Aplica os valores de dificuldade escolhidos no menu, se existirem.
+        // Se o jogo for testado direto na cena (sem passar pelo MainMenu),
+        // os valores configurados no Inspector permanecem inalterados.
+        ApplyDifficultySettings();
+
         centerPosition = transform.position;
         PickRandomDirection();
 
         Debug.Log("[Target] Iniciado em: " + centerPosition + " | Direção inicial: " + currentDirection);
+    }
+
+    private void ApplyDifficultySettings()
+    {
+        if (DifficultyManager.Instance == null)
+        {
+            Debug.Log("[Target] DifficultyManager não encontrado. Usando valores do Inspector (modo teste direto).");
+            return;
+        }
+
+        var settings = DifficultyManager.Instance.GetCurrentSettings();
+        moveSpeed = settings.targetMoveSpeed;
+        pointValue = settings.targetPointValue;
+
+        Debug.Log("[Target] Dificuldade aplicada — Speed: " + moveSpeed + " | Points: " + pointValue);
     }
 
     public void SetSpawner(TargetSpawner spawnerRef)

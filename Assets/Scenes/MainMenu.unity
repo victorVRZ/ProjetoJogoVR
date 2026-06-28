@@ -771,16 +771,19 @@ MonoBehaviour:
     targetPointValue: 100
     botHitChance: 40
     botShootInterval: 3
+    botPointValue: 50
   mediumSettings:
     targetMoveSpeed: 2
     targetPointValue: 150
     botHitChance: 65
     botShootInterval: 2
+    botPointValue: 100
   hardSettings:
     targetMoveSpeed: 3.2
     targetPointValue: 250
     botHitChance: 85
     botShootInterval: 1.2
+    botPointValue: 200
 --- !u!1 &312244675
 GameObject:
   m_ObjectHideFlags: 0

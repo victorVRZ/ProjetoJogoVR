@@ -7,27 +7,20 @@ public class BotTarget : MonoBehaviour
     // -------------------------------------------------------------------------
 
     [Header("Movimento")]
-    // Velocidade de movimento lateral do alvo
     public float moveSpeed = 2f;
-
-    // Distância máxima que o alvo se afasta da posição inicial
     public float moveRange = 3f;
 
     [Header("Score")]
-    // Pontos que o bot ganha ao acertar este alvo
+    // Pontos que o bot ganha ao acertar este alvo.
+    // Sobrescrito automaticamente pela dificuldade selecionada no menu, se houver.
     public int pointValue = 100;
 
     // -------------------------------------------------------------------------
     // VARIÁVEIS PRIVADAS
     // -------------------------------------------------------------------------
 
-    // Posição inicial do alvo para calcular o range
     private Vector3 startPosition;
-
-    // Direção atual do movimento (-1 esquerda, 1 direita)
     private float direction = 1f;
-
-    // Referência ao spawner que criou este alvo
     private BotTargetSpawner spawner;
 
     // -------------------------------------------------------------------------
@@ -36,8 +29,25 @@ public class BotTarget : MonoBehaviour
 
     void Start()
     {
+        ApplyDifficultySettings();
+
         startPosition = transform.position;
-        Debug.Log("[BotTarget] Alvo criado na posição: " + transform.position);
+        Debug.Log("[BotTarget] Alvo criado na posição: " + transform.position +
+                  " | Valor: " + pointValue + " pts");
+    }
+
+    private void ApplyDifficultySettings()
+    {
+        if (DifficultyManager.Instance == null)
+        {
+            Debug.Log("[BotTarget] DifficultyManager não encontrado. Usando valor do Inspector (modo teste direto).");
+            return;
+        }
+
+        var settings = DifficultyManager.Instance.GetCurrentSettings();
+        pointValue = settings.botPointValue;
+
+        Debug.Log("[BotTarget] Dificuldade aplicada — Points: " + pointValue);
     }
 
     void Update()
@@ -73,7 +83,6 @@ public class BotTarget : MonoBehaviour
     {
         Debug.Log("[BotTarget] Alvo acertado pelo bot! Valor: " + pointValue + " pontos.");
 
-        // Avisa o spawner para recriar o alvo
         if (spawner != null)
             spawner.OnTargetDestroyed();
         else
@@ -81,7 +90,6 @@ public class BotTarget : MonoBehaviour
 
         Destroy(gameObject);
 
-        // Retorna o valor dos pontos para o Bot somar no seu próprio score
         return pointValue;
     }
 }
