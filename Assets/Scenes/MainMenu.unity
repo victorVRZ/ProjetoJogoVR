@@ -775,13 +775,13 @@ MonoBehaviour:
   mediumSettings:
     targetMoveSpeed: 2
     targetPointValue: 150
-    botHitChance: 65
+    botHitChance: 55
     botShootInterval: 2
     botPointValue: 100
   hardSettings:
     targetMoveSpeed: 3.2
     targetPointValue: 250
-    botHitChance: 85
+    botHitChance: 80
     botShootInterval: 1.2
     botPointValue: 200
 --- !u!1 &312244675
